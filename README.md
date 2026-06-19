@@ -1,5 +1,10 @@
 # Smoower.Minified
 
+[![CI](https://github.com/smoower/dotnet-minified/actions/workflows/ci.yml/badge.svg)](https://github.com/smoower/dotnet-minified/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Smoower.Minified.AspNetCore.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/Smoower.Minified.AspNetCore)
+[![.NET](https://img.shields.io/badge/.NET-8.0%20%7C%209.0%20%7C%2010.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Your AI pays by the token. ASP.NET Core makes it pay a lot.**
 
 Smoower.Minified is a set of tiny C# libraries that shrink the boilerplate-heavy
@@ -46,23 +51,24 @@ wrote above, folded into the call.
 
 ## What that actually saves you
 
-I measured a full CRUD controller (with logging) against the hand-written
+A full CRUD controller (with logging) was measured against the hand-written
 equivalent, using `o200k_base` as a proxy for Claude's exact tokenizer. Treat it
 as a ratio, not a hard count, because the absolute number swings with how big the
 controller is.
 
-**The compact version came out about 50% smaller in output tokens.** Three things
-follow from that, and I want to be precise about which ones are real.
+**The compact version comes out about 50% smaller in output tokens.** Three things
+follow from that, and it's worth being precise about which ones are real.
 
 The cleanest win is speed. LLMs emit output one token at a time and decode is
 sequential, so wall-clock generation time tracks output-token count almost
 linearly. Half the tokens means roughly half the time to produce that file.
 
 It's also cheaper, once you clear a small break-even. Output tokens are billed,
-and on most APIs they cost 3 to 5 times more than input tokens. The catch: you
-have to add the rules prompt, about 880 tokens of *input*, paid once and
-cacheable. You make that back in under one controller, and everything after is
-savings.
+and they cost several times more than input (5x across the current Claude
+models). The catch: you have to add the rules prompt, about 1,050 tokens of
+*input* for the system prompt (the Claude Code skill is a bit larger), paid once.
+You earn it back within the first controller or two, and faster once that prompt
+is cached.
 
 The third effect is real but second-order. Shorter code burns less context. It
 takes up less of the window and gets re-processed as input on every later turn,
@@ -75,7 +81,7 @@ tokenizer proxy) is on the docs site: **[Does it pay off?](https://smoower.githu
 
 ## Where it does *not* help (so you can trust the numbers)
 
-I'm not going to sell you snake oil. A shortcut only saves cost or time if it
+No snake oil here. A shortcut only saves cost or time if it
 saves **tokens**, and tokens aren't characters.
 
 - `.Where(` to `.w(` saves **zero tokens**. `Where` is already one token, and so
@@ -185,8 +191,8 @@ token sinks worth packaging:
 
 What's *not* worth it: minimal-hosting boilerplate (`WebApplication.CreateBuilder`,
 `AddControllers`, `MapControllers`) measures at roughly 0 token savings, because
-those are already cheap, common tokens. We won't ship shorteners that don't earn
-their keep.
+those are already cheap, common tokens. Shorteners that don't earn their keep
+won't ship.
 
 ## Docs site
 

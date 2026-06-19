@@ -29,7 +29,19 @@
       "Read(//c/Users/timca/.claude/plugins/**)",
       "Bash(ls -R \"C:\\\\Work\\\\github\\\\DeeJayTC\\\\Voxtem\\\\.claude\\\\skills\\\\blog-post\" 2>/dev/null)",
       "Read(//c/Work/github/DeeJayTC/Voxtem/.claude/skills/blog-post/**)",
-      "Bash(python build.py)"
+      "Bash(python build.py)",
+      "Bash(ls src/)",
+      "Bash(find src *)",
+      "Bash(ls -la .github/workflows/)",
+      "Bash(ls *.slnx)",
+      "Bash(find tests *)",
+      "Bash(find samples *)",
+      "Bash(grep -rn \"IsPackable\" src tests samples)",
+      "Bash(python -c \"import yaml,sys; [print\\(f, 'OK' if yaml.safe_load\\(open\\(f\\)\\) else 'EMPTY'\\) for f in ['.github/workflows/ci.yml','.github/workflows/publish-nuget.yml','.github/workflows/pages.yml']]\")",
+      "Bash(python -c ' *)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/publish-nuget.yml'\\)\\); print\\('YAML OK'\\)\")"
     ]
   }
 }

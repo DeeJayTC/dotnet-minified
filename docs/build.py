@@ -342,7 +342,7 @@ def render_economics():
   <div class="callout info">
     <strong>Short version.</strong>
     <strong>Faster</strong> is the strong one: generation is decode-bound and sequential, so wall-clock time tracks output-token count almost linearly. ~50% fewer output tokens means roughly ~50% less generation time per file.
-    <strong>Cheaper</strong> holds after a tiny break-even: output tokens cost more than input, and the one-time prompt is recouped in under one controller (see below).
+    <strong>Cheaper</strong> holds after a tiny break-even: output tokens cost more than input, and the one-time prompt is recouped within a controller or two (see below).
     <strong>Less context</strong> is real but second-order: it's "cheaper" applied to every later turn, since shorter code is re-processed as input each turn.
   </div>
 
@@ -377,7 +377,7 @@ def render_economics():
 {breakeven_rows}
     </tbody>
   </table>
-  <p class="lead">In every case you're ahead before finishing the <strong>first</strong> controller (values &lt; 1). Every controller after that is pure savings: the output tokens you didn't emit, times the price ratio. The more code you generate per session, the better it gets.</p>
+  <p class="lead">Cached, you're ahead well before the first controller is done. Uncached, it's one to two controllers depending on the output:input price ratio (about 1.0 at Claude's current 5&times;, ~1.7 at 3&times;). Either way, every controller after that is pure savings: the output tokens you didn't emit, times the price ratio. The more code you generate per session, the better it gets.</p>
 
   <h2>Faster, the strongest claim</h2>
   <p class="lead">Because decode is sequential, the file that is half the tokens takes roughly half the time to stream out. The added prompt lands in prefill (parallel, and cached after the first call), so it barely touches latency. Net: shorter time-to-finished-file, and a snappier feel when iterating.</p>
@@ -392,6 +392,7 @@ def render_economics():
     <li><strong>Reasoning tokens are unaffected.</strong> On a thinking model, the compact style shrinks the <em>answer</em>, not the hidden reasoning it spends working out the logic.</li>
     <li><strong>Tiny one-off edits don't amortize.</strong> If you generate one three-line snippet and stop, the prompt overhead can exceed the savings. The trade favors output-heavy, multi-file, multi-turn work.</li>
     <li><strong>Character-only shortcuts give none of this.</strong> <code>.Where(</code> → <code>.w(</code> is the same token count, so zero cost or speed benefit. We keep a few for consistency and label them <span class="delta zero">0</span> in the <a href="index.html#overview">reference</a>.</li>
+    <li><strong>Caching has a floor.</strong> Anthropic's prompt cache only engages above a minimum prefix (roughly 1 to 4K tokens, depending on the model: about 4K on Opus, 2K on Sonnet&nbsp;4.6). The ~1,050-token rules prompt clears that floor reliably only when it rides inside the rest of your system prompt, not as a tiny standalone block, so read the cached column as the steady state rather than the first call.</li>
   </ul>
 
   <div class="callout">

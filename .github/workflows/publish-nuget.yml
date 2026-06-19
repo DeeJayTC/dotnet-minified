@@ -1,0 +1,51 @@
+name: Publish to NuGet
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish, without the leading v (for example 0.2.0)'
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+      - name: Resolve version
+        id: ver
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            v="${{ github.event.inputs.version }}"
+          else
+            v="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "Publishing version $v"
+      - name: Restore
+        run: dotnet restore Smoower.Minified.slnx
+      - name: Build
+        run: dotnet build Smoower.Minified.slnx -c Release --no-restore -p:Version=${{ steps.ver.outputs.version }}
+      - name: Test
+        run: dotnet test Smoower.Minified.slnx -c Release --no-build --verbosity normal
+      - name: Pack
+        run: dotnet pack Smoower.Minified.slnx -c Release --no-build -p:Version=${{ steps.ver.outputs.version }} -o artifacts
+      - name: NuGet login (trusted publishing via OIDC)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: smoowerhq
+      - name: Push
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
