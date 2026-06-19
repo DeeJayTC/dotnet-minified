@@ -1,0 +1,67 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+
+namespace Smoower.Minified.EFCore;
+
+// IQueryable / EF Core query shorteners. Predicates and projections use
+// Expression<Func<...>> so EF Core can translate them to SQL.
+public static class QueryExtensions
+{
+    public static IQueryable<T> w<T>(this IQueryable<T> q, Expression<Func<T, bool>> predicate)
+        => q.Where(predicate);
+
+    public static IQueryable<TResult> s<T, TResult>(this IQueryable<T> q, Expression<Func<T, TResult>> selector)
+        => q.Select(selector);
+
+    public static IOrderedQueryable<T> ob<T, TKey>(this IQueryable<T> q, Expression<Func<T, TKey>> key)
+        => q.OrderBy(key);
+
+    public static IOrderedQueryable<T> obd<T, TKey>(this IQueryable<T> q, Expression<Func<T, TKey>> key)
+        => q.OrderByDescending(key);
+
+    public static IOrderedQueryable<T> tb<T, TKey>(this IOrderedQueryable<T> q, Expression<Func<T, TKey>> key)
+        => q.ThenBy(key);
+
+    public static IOrderedQueryable<T> tbd<T, TKey>(this IOrderedQueryable<T> q, Expression<Func<T, TKey>> key)
+        => q.ThenByDescending(key);
+
+    public static IQueryable<T> sk<T>(this IQueryable<T> q, int count)
+        => q.Skip(count);
+
+    public static IQueryable<T> tk<T>(this IQueryable<T> q, int count)
+        => q.Take(count);
+
+    public static IQueryable<T> nt<T>(this IQueryable<T> q) where T : class
+        => q.AsNoTracking();
+
+    public static IIncludableQueryable<T, TProperty> inc<T, TProperty>(this IQueryable<T> q, Expression<Func<T, TProperty>> path) where T : class
+        => q.Include(path);
+
+    public static Task<List<T>> lst<T>(this IQueryable<T> q, CancellationToken ct = default)
+        => q.ToListAsync(ct);
+
+    public static Task<T?> one<T>(this IQueryable<T> q, CancellationToken ct = default)
+        => q.FirstOrDefaultAsync(ct);
+
+    public static Task<T?> single<T>(this IQueryable<T> q, CancellationToken ct = default)
+        => q.SingleOrDefaultAsync(ct);
+
+    public static Task<bool> any<T>(this IQueryable<T> q, CancellationToken ct = default)
+        => q.AnyAsync(ct);
+
+    public static Task<int> cnt<T>(this IQueryable<T> q, CancellationToken ct = default)
+        => q.CountAsync(ct);
+
+    // Synchronous terminators (suffix S). See WriteExtensions for the rationale:
+    // async stays unmarked because that's where the token savings are.
+    public static List<T> lstS<T>(this IQueryable<T> q) => q.ToList();
+
+    public static T? oneS<T>(this IQueryable<T> q) => q.FirstOrDefault();
+
+    public static T? singleS<T>(this IQueryable<T> q) => q.SingleOrDefault();
+
+    public static bool anyS<T>(this IQueryable<T> q) => q.Any();
+
+    public static int cntS<T>(this IQueryable<T> q) => q.Count();
+}

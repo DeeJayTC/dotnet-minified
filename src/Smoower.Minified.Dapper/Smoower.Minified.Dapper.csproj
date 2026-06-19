@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(SmoowerLibTargets)</TargetFrameworks>
+    <PackageId>Smoower.Minified.Dapper</PackageId>
+    <Description>Compact Dapper helpers for AI-generated code: q/q1/qs/ex/scalar over IDbConnection, for projects not using EF Core.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+  </ItemGroup>
+
+</Project>

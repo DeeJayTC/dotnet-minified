@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(SmoowerLibTargets)</TargetFrameworks>
+    <PackageId>Smoower.Minified.Http</PackageId>
+    <Description>Compact HttpClient JSON helpers for AI-generated code: getJson/postJson/putJson/patchJson/del over System.Net.Http.Json.</Description>
+  </PropertyGroup>
+
+</Project>

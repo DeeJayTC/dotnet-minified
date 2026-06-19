@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(dotnet --version)",
+      "PowerShell(dotnet sln C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\MinifiedDotnet.slnx add C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\src\\\\MinifiedDotnet\\\\MinifiedDotnet.csproj C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\samples\\\\MinifiedDotnet.SampleApi\\\\MinifiedDotnet.SampleApi.csproj C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\tests\\\\MinifiedDotnet.Tests\\\\MinifiedDotnet.Tests.csproj)",
+      "PowerShell(dotnet build C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\MinifiedDotnet.slnx -c Debug --nologo)",
+      "PowerShell(dotnet test C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\tests\\\\MinifiedDotnet.Tests\\\\MinifiedDotnet.Tests.csproj --nologo)",
+      "PowerShell($env:ASPNETCORE_URLS=\"http://localhost:5199\"; Start-Process -FilePath \"dotnet\" -ArgumentList \"run --project C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\samples\\\\MinifiedDotnet.SampleApi\\\\MinifiedDotnet.SampleApi.csproj --no-build\" -PassThru | Select-Object Id | Out-File C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\.pid.txt -Encoding utf8; Start-Sleep -Seconds 6; try { $all = Invoke-RestMethod http://localhost:5199/api/users; \"GET all -> $\\($all | ConvertTo-Json -Compress\\)\"; $one = Invoke-RestMethod http://localhost:5199/api/users/1; \"GET 1 -> $\\($one | ConvertTo-Json -Compress\\)\" } catch { \"ERR: $_\" })",
+      "PowerShell(try { $post = Invoke-RestMethod http://localhost:5199/api/users -Method Post -ContentType \"application/json\" -Body '{\"name\":\"Grace Hopper\",\"email\":\"grace@example.com\"}'; \"POST -> $\\($post | ConvertTo-Json -Compress\\)\"; Invoke-RestMethod \"http://localhost:5199/api/users/$\\($post.id\\)\" -Method Delete; \"DELETE $\\($post.id\\) -> ok\"; $bad = try { Invoke-RestMethod http://localhost:5199/api/users -Method Post -ContentType \"application/json\" -Body '{\"name\":\"\",\"email\":\"x\"}' } catch { $_.Exception.Response.StatusCode.value__ }; \"POST empty name -> HTTP $bad\" } catch { \"ERR: $_\" } finally { Get-Process dotnet -ErrorAction SilentlyContinue | Where-Object { $_.Id -ne $PID } | Stop-Process -Force -ErrorAction SilentlyContinue })",
+      "PowerShell(git -C C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified status --short)",
+      "PowerShell($py = \\(Get-Command python -ErrorAction SilentlyContinue\\); if\\($py\\){ \"python: $\\($py.Source\\)\"; python -c \"import tiktoken; print\\('tiktoken ok'\\)\" } else { \"no python\" })",
+      "PowerShell(python C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\.tokens.py)",
+      "PowerShell(dotnet sln C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\MinifiedDotnet.slnx add C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\src\\\\MinifiedDotnetUltra\\\\MinifiedDotnetUltra.csproj)",
+      "PowerShell(dotnet build C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\MinifiedDotnet.slnx -c Debug --nologo 2>&1)",
+      "PowerShell(dotnet test C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\tests\\\\MinifiedDotnet.Tests\\\\MinifiedDotnet.Tests.csproj --nologo 2>&1)",
+      "PowerShell(python C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\bench\\\\tokens.py)",
+      "PowerShell(dotnet test C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\MinifiedDotnet.slnx --nologo 2>&1)",
+      "PowerShell(\"---\")",
+      "PowerShell(dotnet build C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\src\\\\Smoower.Minified.Core\\\\Smoower.Minified.Core.csproj --nologo 2>&1)",
+      "PowerShell(dotnet build C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\src\\\\Smoower.Minified.AspNetCore\\\\Smoower.Minified.AspNetCore.csproj --nologo 2>&1)",
+      "PowerShell(foreach\\($p in \"Http\",\"Redis\",\"Logging\",\"Hosting\"\\){ \"=== $p ===\"; dotnet build \"C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\src\\\\Smoower.Minified.$p\\\\Smoower.Minified.$p.csproj\" --nologo 2>&1 | Select-Object -Last 4 })",
+      "PowerShell(\"old sample removed\")",
+      "PowerShell(\"old tests removed\")",
+      "PowerShell(dotnet build C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified\\\\Smoower.Minified.slnx --nologo 2>&1)",
+      "Edit(/.claude/skills/smoower-minified/**)",
+      "PowerShell(cd C:\\\\work\\\\github\\\\DeeJayTC\\\\dotnet-minified; $h=Get-Content docs/index.html -Raw; \"sections: $\\(\\([regex]::Matches\\($h,'<section id='\\)\\).Count\\) \\(expect 11\\)\"; \"has validation: $\\($h.Contains\\('id=\\\\\"validation\\\\\"'\\)\\)\"; \"has json: $\\($h.Contains\\('id=\\\\\"json\\\\\"'\\)\\)\"; \"nav has Validation: $\\($h.Contains\\('#validation'\\)\\)\")"
+    ]
+  }
+}

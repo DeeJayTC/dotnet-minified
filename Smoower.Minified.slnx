@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/Smoower.Minified.SampleApi/Smoower.Minified.SampleApi.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Smoower.Minified.AspNetCore/Smoower.Minified.AspNetCore.csproj" />
+    <Project Path="src/Smoower.Minified.Core/Smoower.Minified.Core.csproj" />
+    <Project Path="src/Smoower.Minified.Dapper/Smoower.Minified.Dapper.csproj" />
+    <Project Path="src/Smoower.Minified.EFCore/Smoower.Minified.EFCore.csproj" />
+    <Project Path="src/Smoower.Minified.Hosting/Smoower.Minified.Hosting.csproj" />
+    <Project Path="src/Smoower.Minified.Http/Smoower.Minified.Http.csproj" />
+    <Project Path="src/Smoower.Minified.Json.Newtonsoft/Smoower.Minified.Json.Newtonsoft.csproj" />
+    <Project Path="src/Smoower.Minified.Json/Smoower.Minified.Json.csproj" />
+    <Project Path="src/Smoower.Minified.Logging/Smoower.Minified.Logging.csproj" />
+    <Project Path="src/Smoower.Minified.Redis/Smoower.Minified.Redis.csproj" />
+    <Project Path="src/Smoower.Minified.Validation/Smoower.Minified.Validation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Smoower.Minified.Tests/Smoower.Minified.Tests.csproj" />
+  </Folder>
+</Solution>

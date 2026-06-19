@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(SmoowerLibTargets)</TargetFrameworks>
+    <PackageId>Smoower.Minified.Json.Newtonsoft</PackageId>
+    <Description>Compact Newtonsoft.Json helpers for AI-generated code: toJson()/fromJson&lt;T&gt;(). Same names as Smoower.Minified.Json, different namespace - import one.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

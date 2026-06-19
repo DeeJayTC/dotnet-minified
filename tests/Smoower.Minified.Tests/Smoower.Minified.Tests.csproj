@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.*" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Smoower.Minified.Core\Smoower.Minified.Core.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.AspNetCore\Smoower.Minified.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.EFCore\Smoower.Minified.EFCore.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Http\Smoower.Minified.Http.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Redis\Smoower.Minified.Redis.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Logging\Smoower.Minified.Logging.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Hosting\Smoower.Minified.Hosting.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Validation\Smoower.Minified.Validation.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Json\Smoower.Minified.Json.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Json.Newtonsoft\Smoower.Minified.Json.Newtonsoft.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Dapper\Smoower.Minified.Dapper.csproj" />
+  </ItemGroup>
+
+</Project>
