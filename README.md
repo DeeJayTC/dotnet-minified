@@ -103,7 +103,39 @@ models, and config don't shrink, only the framework ceremony does.
 
 ## Getting started
 
-1. Add the packages you need (they multi-target net8.0 / net9.0 / net10.0):
+Two ways in. If you have an AI assistant with tool access (Claude Code, Copilot,
+Cursor), let it do the wiring. Otherwise add the packages by hand — it's three
+small steps.
+
+### Option A — let your AI set it up
+
+Paste **[prompts/setup-prompt.md](prompts/setup-prompt.md)** to your assistant in
+a new or existing repo. It detects the project (or scaffolds a Web API in an
+empty repo), installs the packages the project actually needs — or the default
+ASP.NET backend set when unsure — writes `GlobalUsings.cs`, adds the compact-style
+rules to your `CLAUDE.md` / `.github/copilot-instructions.md`, and builds to
+verify. It's safe to re-run; it only adds what's missing.
+
+> **Claude Code** users can skip the paste: the repo ships a skill at
+> `.claude/skills/smoower-minified/`, so just ask it to *"set up Smoower.Minified
+> in this project."*
+
+### Option B — install by hand
+
+1. Add the packages you need (all `0.1.0`, multi-targeting net8.0 / net9.0 /
+   net10.0). The default set for an ASP.NET Core backend:
+
+   ```bash
+   dotnet add package Smoower.Minified.Core
+   dotnet add package Smoower.Minified.AspNetCore
+   dotnet add package Smoower.Minified.EFCore
+   dotnet add package Smoower.Minified.Hosting
+   dotnet add package Smoower.Minified.Logging
+   dotnet add package Smoower.Minified.Validation
+   ```
+
+   Or, as `PackageReference` entries — take only what you use (see
+   [The packages](#the-packages)):
 
    ```xml
    <PackageReference Include="Smoower.Minified.AspNetCore" Version="0.1.0" />

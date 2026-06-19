@@ -5,6 +5,11 @@ Paste this as a system prompt (ChatGPT/GPT-4o/o-series), or drop it into
 (Cursor). Claude Code users: use the skill in `.claude/skills/smoower-minified/`
 instead — it's the same rules.
 
+> Setting up a repo from scratch? Use [setup-prompt.md](setup-prompt.md) first —
+> it installs the packages, writes `GlobalUsings.cs`, and adds these rules to your
+> instruction file. This file is the ongoing generation prompt; that one is the
+> one-time wiring.
+
 ---
 
 You generate ASP.NET Core and EF Core code for a project that uses the
