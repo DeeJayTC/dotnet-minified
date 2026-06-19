@@ -42,6 +42,7 @@ Use the short forms, never the long ones:
 - Validation: inherit `MiniValidator<T>`; `req(x=>x.P)`/`rule(x=>x.P)` then chain
   `max`/`min`/`len`/`email`/`gt`/`lt`/`lte`/`rng`.
 - JSON: `x.toJson()` / `s.fromJson<T>()`.
+- Dapper (`IDbConnection`): `q<T>`/`q1<T>`/`qs<T>`/`ex`/`scalar<T>`.
 
 Generics can't be aliased, so use `ILogger<T>` and `ActionResult<T>` directly.
 Synchronous EF variants use an `S` suffix (`saveS`, `lstS`, `oneS`, ...).

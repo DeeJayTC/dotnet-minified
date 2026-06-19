@@ -49,6 +49,7 @@ global using Cfg = Microsoft.Extensions.Configuration.IConfiguration;
 | `svc.scoped<I,T>()` `svc.single<T>()` `svc.trans<T>()` | `AddScoped` `AddSingleton` `AddTransient` |
 | `c.getJson<T>(url)` `c.postJson(url,b)` | `GetFromJsonAsync` `PostAsJsonAsync` |
 | `db.get(k)` `db.set(k,v)` `db.getJson<T>(k)` | StackExchange.Redis `StringGetAsync` ... |
+| `c.q<T>(sql,p)` `c.q1<T>(...)` `c.ex(sql,p)` `c.scalar<T>(...)` | Dapper `QueryAsync`/`QueryFirstOrDefaultAsync`/`ExecuteAsync` ... |
 
 Prefer the result-fusing terminators (`ok1`/`okl`/`okId`/`okAdd`/`delById`) so an
 action is a single expression with no `async`/`await`/`return`/`Ok`/`NotFound`.

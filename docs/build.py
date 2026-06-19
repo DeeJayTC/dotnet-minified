@@ -229,6 +229,21 @@ LIBS = [
             ]),
         ],
     },
+    {
+        "id": "dapper",
+        "name": "Smoower.Minified.Dapper",
+        "blurb": "Compact Dapper helpers on IDbConnection, for projects not using EF Core. Thin async wrappers; pass Dapper's usual anonymous-type parameter bag.",
+        "deps": "Dapper",
+        "groups": [
+            ("IDbConnection", [
+                ("c.q<T>(sql, p)", "c.QueryAsync<T>(sql, p)", "many rows"),
+                ("c.q1<T>(sql, p)", "c.QueryFirstOrDefaultAsync<T>(sql, p)", "first or default"),
+                ("c.qs<T>(sql, p)", "c.QuerySingleOrDefaultAsync<T>(sql, p)", "single or default"),
+                ("c.ex(sql, p)", "c.ExecuteAsync(sql, p)", "rows affected"),
+                ("c.scalar<T>(sql, p)", "c.ExecuteScalarAsync<T>(sql, p)", "scalar value"),
+            ]),
+        ],
+    },
 ]
 
 

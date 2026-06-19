@@ -22,6 +22,7 @@
 <a href="#hosting"><code>Hosting</code></a>
 <a href="#validation"><code>Validation</code></a>
 <a href="#json"><code>Json</code></a>
+<a href="#dapper"><code>Dapper</code></a>
 <a class="group" href="economics.html">Does it pay off?</a>
   </nav>
 </aside>
@@ -246,6 +247,20 @@
 <table><thead><tr><th>Compact</th><th>Long form</th><th>tok&nbsp;&Delta;</th><th>Notes</th></tr></thead><tbody>
 <tr><td class="short"><code>x.toJson()</code></td><td class="long"><code>JsonConvert.SerializeObject(x)</code></td><td><span class="delta pos">+2</span></td><td></td></tr>
 <tr><td class="short"><code>s.fromJson&lt;T&gt;()</code></td><td class="long"><code>JsonConvert.DeserializeObject&lt;T&gt;(s)</code></td><td><span class="delta pos">+3</span></td><td></td></tr>
+</tbody></table>
+</section>
+<section id="dapper">
+<h2>Smoower.Minified.Dapper</h2>
+<p class="lead">Compact Dapper helpers on IDbConnection, for projects not using EF Core. Thin async wrappers; pass Dapper&#x27;s usual anonymous-type parameter bag.</p>
+<p class="deps"><strong>Depends on:</strong> Dapper</p>
+<pre>&lt;PackageReference Include="Smoower.Minified.Dapper" Version="0.1.0" /&gt;</pre>
+<h3>IDbConnection</h3>
+<table><thead><tr><th>Compact</th><th>Long form</th><th>tok&nbsp;&Delta;</th><th>Notes</th></tr></thead><tbody>
+<tr><td class="short"><code>c.q&lt;T&gt;(sql, p)</code></td><td class="long"><code>c.QueryAsync&lt;T&gt;(sql, p)</code></td><td><span class="delta pos">+1</span></td><td>many rows</td></tr>
+<tr><td class="short"><code>c.q1&lt;T&gt;(sql, p)</code></td><td class="long"><code>c.QueryFirstOrDefaultAsync&lt;T&gt;(sql, p)</code></td><td><span class="delta pos">+3</span></td><td>first or default</td></tr>
+<tr><td class="short"><code>c.qs&lt;T&gt;(sql, p)</code></td><td class="long"><code>c.QuerySingleOrDefaultAsync&lt;T&gt;(sql, p)</code></td><td><span class="delta pos">+3</span></td><td>single or default</td></tr>
+<tr><td class="short"><code>c.ex(sql, p)</code></td><td class="long"><code>c.ExecuteAsync(sql, p)</code></td><td><span class="delta pos">+1</span></td><td>rows affected</td></tr>
+<tr><td class="short"><code>c.scalar&lt;T&gt;(sql, p)</code></td><td class="long"><code>c.ExecuteScalarAsync&lt;T&gt;(sql, p)</code></td><td><span class="delta pos">+2</span></td><td>scalar value</td></tr>
 </tbody></table>
 </section>
 <footer>
