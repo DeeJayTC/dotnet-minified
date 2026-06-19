@@ -41,7 +41,8 @@
       "Bash(python -c ' *)",
       "Skill(claude-api)",
       "Skill(claude-api:*)",
-      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/publish-nuget.yml'\\)\\); print\\('YAML OK'\\)\")"
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/publish-nuget.yml'\\)\\); print\\('YAML OK'\\)\")",
+      "Bash(python -c \"import yaml; d=yaml.safe_load\\(open\\('.github/workflows/publish-nuget.yml'\\)\\); j=d['jobs']['publish']; print\\('env:', j.get\\('environment'\\)\\); print\\('id-token:', d['permissions'].get\\('id-token'\\)\\); print\\('YAML OK'\\)\")"
     ]
   }
 }
