@@ -19,7 +19,7 @@
   <circle cx="52" cy="110" r="5" fill="#30363d"/>
   <circle cx="70" cy="110" r="5" fill="#30363d"/>
   <circle cx="88" cy="110" r="5" fill="#30363d"/>
-  <text x="388" y="115" font-size="12" fill="#6e7681" text-anchor="end">hand-written</text>
+  <text x="108" y="114" font-size="12" fill="#6e7681">hand-written</text>
   <g font-size="14.5" fill="#6e7681">
     <text x="52" y="156">[HttpGet("{id}")]</text>
     <text x="52" y="182">public async Task&lt;IActionResult&gt;</text>
@@ -46,7 +46,7 @@
   <circle cx="536" cy="110" r="5" fill="#3fb95066"/>
   <circle cx="554" cy="110" r="5" fill="#3fb95066"/>
   <circle cx="572" cy="110" r="5" fill="#3fb95066"/>
-  <text x="872" y="115" font-size="12" fill="#3fb950" text-anchor="end">Smoower.Minified</text>
+  <text x="592" y="114" font-size="12" fill="#3fb950">Smoower.Minified</text>
   <g font-size="15" fill="#c9d1d9">
     <text x="536" y="208">[<tspan fill="#3fb950">HG</tspan>("{id}")]<tspan fill="#58a6ff">public</tspan> <tspan fill="#3fb950">Tr</tspan> Get(<tspan fill="#ff7b72">int</tspan> id)=&gt;</text>
     <text x="536" y="240">  db.Users.<tspan fill="#3fb950">nt</tspan>().<tspan fill="#3fb950">w</tspan>(x=&gt;x.Id==id)</text>

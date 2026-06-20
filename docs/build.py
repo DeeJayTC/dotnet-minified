@@ -344,6 +344,7 @@ INDEX = """<section>
     <div class="box"><div class="n hl">Lighter</div><div class="l">shorter code leaves more room in the context window over a session</div></div>
   </div>
   <p class="lead">Expect roughly <strong>10&ndash;25% fewer output tokens across a whole project</strong>, and <strong>25&ndash;45% on the boilerplate-heavy controller files</strong> an assistant rewrites most often. The full arithmetic is on <a href="economics.html">Does it pay off?</a></p>
+  <p class="lead"><strong>And it compounds with every agent step.</strong> A modern coding assistant does not write a file once &mdash; it works in a loop: read the code, edit it, re-read it, refactor, run again. Each step re-emits and re-reads the same source, so a token saved is not saved once &mdash; it is saved again on every turn that touches that code, and again as that smaller output becomes the input the next step has to read. The leaner each step, the leaner the one built on top of it, so the gap against the verbose form widens the longer an agent runs.</p>
 
   <h2>What it saves on real code</h2>
   <p class="lead">Not a toy benchmark &mdash; these are untouched production files from a live .NET app, rewritten in the compact style and measured with Claude&rsquo;s own tokenizer (<code>claude-opus-4-8</code>). On files that are mostly framework ceremony, the compact form cuts up to half the tokens; spread across a whole application, where most code is business logic that should not compress, the saving settles at up to around a quarter.</p>
