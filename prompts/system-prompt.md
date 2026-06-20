@@ -18,13 +18,19 @@ the most compact valid C# using its helpers, to minimize output tokens (this
 directly lowers API cost and speeds up generation). Output code only unless asked
 to explain.
 
+Before generating, ask which compaction level to apply: **L1** (aliases, readable,
+the default), **L2** (short domain names with the contract pinned), or **L3**
+(whitespace-packed). Skip the question only if the user already chose; keep the
+level for the session.
+
 Rules:
 - File-scoped namespaces, primary constructors, records for DTOs, nullable on.
 - No comments, no XML docs, no `#region`, no unnecessary blank lines.
 - Assume the project's `GlobalUsings.cs` imports the `Smoower.Minified.*`
-  namespaces and declares the aliases `Ctl` (ControllerBase), `Res`
-  (IActionResult), `Tr` (Task<IActionResult>), `CT` (CancellationToken), `Cfg`
-  (IConfiguration). Add them if missing. Minimal-API projects also declare `R`
+  namespaces and declares the aliases `Res` (IActionResult), `Tr`
+  (Task<IActionResult>), `CT` (CancellationToken), `Cfg` (IConfiguration). `Ctl`
+  is the controller base class from the package (inherit it, not `ControllerBase`).
+  Add them if missing. Minimal-API projects also declare `R`
   (Results) and `Ir` (Task<IResult>); test projects declare `F`/`Th`/`In`/`Mem`
   (Fact/Theory/InlineData/MemberData).
 

@@ -26,8 +26,9 @@ summary of what you changed at the end; do not explain each step as you go.
 
 ## 2. Install the packages
 
-All packages are version `0.1.0` and multi-target `net8.0` / `net9.0` /
-`net10.0`. Add them to the chosen project.
+The packages multi-target `net8.0` / `net9.0` / `net10.0`. Install the **latest**
+version of each: run the plain `dotnet add package` commands below, never pass
+`--version` or pin a version.
 
 **Default set for an ASP.NET Core backend** (use this when unsure):
 
@@ -46,6 +47,7 @@ dotnet add package Smoower.Minified.Validation
 | --- | --- |
 | `Smoower.Minified.Core` | always (guards + base aliases, zero framework deps) |
 | `Smoower.Minified.AspNetCore` | has controllers / returns `IActionResult` |
+| `Smoower.Minified.MinimalApi` | uses Minimal APIs instead of controllers |
 | `Smoower.Minified.EFCore` | queries or writes via EF Core |
 | `Smoower.Minified.Hosting` | registers services in DI |
 | `Smoower.Minified.Logging` | uses `ILogger` |
@@ -55,8 +57,11 @@ dotnet add package Smoower.Minified.Validation
 | `Smoower.Minified.Dapper` | queries via Dapper / `IDbConnection` |
 | `Smoower.Minified.Json` | needs `toJson()` / `fromJson<T>()` (System.Text.Json) |
 | `Smoower.Minified.Json.Newtonsoft` | same, but on Newtonsoft.Json |
+| `Smoower.Minified.Identity` | uses ASP.NET Core Identity |
+| `Smoower.Minified.Extensions` | wants the Clock / DateTime / env helpers |
+| `Smoower.Minified.Testing` | the **test** project (xUnit assertion + attribute shorteners) |
 
-Do **not** add `Json` and `Json.Newtonsoft` together — pick one.
+Do **not** add `Json` and `Json.Newtonsoft` together; pick one.
 
 ## 3. Add GlobalUsings.cs
 
@@ -74,7 +79,6 @@ global using Smoower.Minified.Hosting;
 global using Smoower.Minified.Logging;
 global using Smoower.Minified.Validation;
 
-global using Ctl = Microsoft.AspNetCore.Mvc.ControllerBase;
 global using Res = Microsoft.AspNetCore.Mvc.IActionResult;
 global using AR  = Microsoft.AspNetCore.Mvc.ActionResult;
 global using CT  = System.Threading.CancellationToken;
@@ -104,13 +108,18 @@ Write this rules block into the chosen file:
 When generating ASP.NET Core / EF Core code, use the Smoower.Minified compact
 helpers. These change how code is *written*, never what it *does*.
 
+- **Before generating, ask which compaction level to apply**: L1 (aliases,
+  readable, the default), L2 (short domain names with the contract pinned), or L3
+  (whitespace-packed). Skip the question only if the user already chose. Keep the
+  level for the rest of the session.
 - Output code only (no comments, no XML docs `///`, no `#region`, no extra blank
   lines). File-scoped namespaces, primary constructors, records for DTOs,
   nullable on, latest C#.
 - Assume `GlobalUsings.cs` imports the `Smoower.Minified.*` namespaces and
-  declares the aliases `Ctl` (ControllerBase), `Res` (IActionResult), `AR`
-  (ActionResult), `Tr` (Task<IActionResult>), `CT` (CancellationToken), `Cfg`
-  (IConfiguration). Add any that are missing.
+  declares the aliases `Res` (IActionResult), `AR` (ActionResult), `Tr`
+  (Task<IActionResult>), `CT` (CancellationToken), `Cfg` (IConfiguration). `Ctl`
+  is the controller base class from `Smoower.Minified.AspNetCore` (inherit it, not
+  `ControllerBase`), not an alias. Add anything missing.
 - Attributes: `[API]` `[RT("...")]` `[HG]` `[HPO]` `[HPU]` `[HPA]` `[HD]`
   `[AUTH]` `[ANON]` `[FB]` `[FR]` `[FQ]` `[FH]` — never `[ApiController]`,
   `[HttpGet]`, `[Route]`, `[FromBody]`, etc.
