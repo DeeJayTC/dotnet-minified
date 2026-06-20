@@ -13,6 +13,9 @@ public class TodoList
     public DateTime CreatedAt { get; set; }
 }
 
+
+public class C_TT: TodoTask;
+
 public class TodoTask
 {
     public int Id { get; set; }
@@ -25,6 +28,9 @@ public class TodoTask
     public int? AssigneeId { get; set; }
     public DateTime? CompletedAt { get; set; }
     public int? RecurrenceDays { get; set; }
+
+    public int? P_RD { get { return RecurrenceDays; } set { RecurrenceDays = value; } }
+
     public int? ParentTaskId { get; set; }
     public DateTime CreatedAt { get; set; }
     public List<TodoTask> Subtasks { get; set; } = [];

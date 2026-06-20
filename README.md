@@ -21,11 +21,10 @@
 
 <p align="center">
   <a href="https://smoower.github.io/dotnet-minified/">Docs</a> ·
-  <a href="#get-started-in-seconds">Get started</a> ·
-  <a href="#the-cheat-sheet">Cheat sheet</a> ·
-  <a href="#the-packages">Packages</a> ·
-  <a href="https://smoower.github.io/dotnet-minified/economics.html">Does it pay off?</a> ·
-  <a href="#the-minified-family">The family</a>
+  <a href="https://smoower.github.io/dotnet-minified/quickstart.html">Quickstart</a> ·
+  <a href="https://smoower.github.io/dotnet-minified/compaction-levels.html">Compaction levels</a> ·
+  <a href="https://smoower.github.io/dotnet-minified/cheat-sheet.html">Cheat sheet</a> ·
+  <a href="https://smoower.github.io/dotnet-minified/economics.html">Does it pay off?</a>
 </p>
 
 <div align="center">
@@ -40,8 +39,14 @@ stable forms. The alias layer (L1) is 100% ordinary C# — no transpiler, no mag
 same IL, fewer tokens. An opt-in `[Crud<>]` source generator and the deeper L2/L3
 levels go further when you want them, always keeping the public contract intact.
 
-📖 **Full per-library before/after reference (with per-mapping token deltas):
-<https://smoower.github.io/dotnet-minified/>**
+It cuts the **output tokens** an AI emits for .NET code by roughly **10–25% across
+a whole project**, and **25–45% in boilerplate-heavy controller files** — which
+means faster generation, a smaller bill on metered billing, and more headroom in
+the context window on subscription tools. It's ordinary C#, so none of this costs
+you any runtime behavior.
+
+📖 **Full documentation — getting started, compaction levels, the per-mapping
+cheat sheet, and the economics: <https://smoower.github.io/dotnet-minified/>**
 
 ## Get started in seconds
 
@@ -59,57 +64,13 @@ dotnet add package Smoower.Minified.EFCore
 ```
 
 That's it — your next controller comes out compact. Full walkthrough (let your
-AI wire it, or do it by hand) in **[Getting started](#getting-started)** below.
+AI wire it, or do it by hand) in the
+**[Quickstart](https://smoower.github.io/dotnet-minified/quickstart.html)** and
+**[Installation](https://smoower.github.io/dotnet-minified/installation.html)**
+guides.
 
----
-
-## TL;DR
-
-Smoower.Minified cuts the **output tokens** an AI emits for .NET code by roughly
-**10–25% across a whole project**, and **25–45% in boilerplate-heavy controller
-files**. The tokens are only the mechanism — where the value lands depends on how
-you pay for AI, and it's rarely *just* a smaller bill:
-
-- **Metered / API billing** (you pay per token): fewer output tokens is a
-  directly smaller invoice. Output is the expensive side of the meter (~5× input
-  on current Claude models) and generated code is almost all output.
-- **Subscription tools** (Claude Pro/Max, Copilot, Cursor): the value is
-  operational, not on an invoice. More of your codebase fits in the context
-  window, agents waste less of their turn/session budget regenerating the same
-  ceremony, long sessions stay coherent longer, and you hit usage or rate limits
-  later.
-- **Everyone:** generation time tracks output length, so roughly half the tokens
-  is roughly half the wait.
-
-It's ordinary C# — same IL, no source generator — so none of this costs you any
-runtime behavior. The full arithmetic is on
-[Does it pay off?](https://smoower.github.io/dotnet-minified/economics.html).
-
----
-
-## Compaction levels
-
-Smoower.Minified is a dial, not a switch. The Claude Code skill **asks you which
-level** before it generates — pick by how much you value readable-on-disk vs raw
-token count (a planned VS Code virtual view + `names.map` restore readability at
-the deeper levels).
-
-| Level | What it adds | Reaches | Readable on disk? |
-| --- | --- | --- | --- |
-| **L1 — Aliases** | smoower short handles + optional `[Crud<>]` generator | framework ceremony (~18–35% on a controller) | yes |
-| **L2 — Mapped** | short domain names, long form pinned in `[JPN]`/`[Col]`/`global using` + a `names.map` | the business-logic / contract floor; compounds with codebase size | with tooling/comments |
-| **L3 — Max** | whitespace packed — every newline + indentation removed | everything | tooling only |
-
-On a real task-management API ([`samples/TodoApi`](samples/TodoApi)) the ladder
-measured traditional → smoower → packed at **5049 → 4121 (~18%) → 3785 (~25%)**
-Claude tokens; short-naming the hot domain vocabulary (L2) keeps paying as the
-codebase grows ([`bench/FINDINGS.md`](bench/FINDINGS.md) §4–6). At every level the
-contract — routes, status codes, JSON/DB *values* — is unchanged; only the in-code
-handle moves.
-
-## The bill nobody talks about
-
-Here's a perfectly normal controller action. Count the ceremony:
+Here's the same controller action, hand-written and with Smoower.Minified —
+identical behavior, identical compiled IL:
 
 ```csharp
 [HttpGet("{id}")]
@@ -124,162 +85,32 @@ public async Task<IActionResult> Get(int id)
 }
 ```
 
-`HttpGet`, `Task<IActionResult>`, `AsNoTracking`, `FirstOrDefaultAsync`,
-`NotFound`, `Ok`. None of that is *your* logic. It's the framework tax. And
-every time your AI assistant writes, rewrites, or refactors a controller, it pays
-that tax again in **output tokens**.
-
-The same action with Smoower.Minified:
-
 ```csharp
 [HG("{id}")]public Tr Get(int id)=>db.Users.nt().w(x=>x.Id==id).s(x=>new{x.Id,x.Name,x.Email}).ok1();
 ```
 
-One line. Same behavior. `ok1()` runs the query and returns `200` with the row,
-or `404` if it's missing. That's the exact `x == null ? NotFound() : Ok(x)` you
-wrote above, folded into the call.
+One line, same behavior. `ok1()` runs the query and returns `200` with the row,
+or `404` if it's missing. Why this saves tokens is on
+[How it works](https://smoower.github.io/dotnet-minified/how-it-works.html); every
+mapping is on the [Cheat sheet](https://smoower.github.io/dotnet-minified/cheat-sheet.html).
 
-## What that actually saves you
+## Compaction levels
 
-A full CRUD controller (with logging) was measured against the hand-written
-equivalent — both with `tiktoken`'s `o200k_base` as an offline proxy and with
-Claude's own tokenizer via the free `count_tokens` API. Treat it as a ballpark,
-not a hard count: the bench rounds to the nearest 5%, and the figure swings with
-how big the controller is and which tokenizer you use.
+Smoower.Minified is a dial, not a switch. Pick by how much you value
+readable-on-disk vs raw token count — the Claude Code skill asks you which level
+before it generates.
 
-**The compact version comes out roughly 35-40% smaller in output tokens**
-(Claude's real tokenizer measures ~35%, the tiktoken proxy ~40% — reproduce with
-`python bench/tokens.py`; set `ANTHROPIC_API_KEY` to add the Claude column).
-Three things follow from that, and it's worth being precise about which ones are
-real.
+| Level | What it adds | Readable on disk? |
+| --- | --- | --- |
+| **L1 — Aliases** | smoower short handles + optional `[Crud<>]` generator | yes |
+| **L2 — Mapped** | short domain names, long form pinned in `[JPN]`/`[Col]`/`global using` + a `names.map` | with tooling |
+| **L3 — Max** | whitespace packed — every newline + indentation removed | tooling view |
 
-The cleanest win is speed. LLMs emit output one token at a time and decode is
-sequential, so wall-clock generation time tracks output-token count almost
-linearly. Half the tokens means roughly half the time to produce that file.
-
-It's also cheaper, once you clear a small break-even. Output tokens are billed,
-and they cost several times more than input (5x across the current Claude
-models). The catch: you have to add the rules prompt, about 1,050 tokens of
-*input* for the system prompt (the Claude Code skill is a bit larger), paid once.
-You earn it back within the first controller or two, and faster once that prompt
-is cached.
-
-The third effect is real but second-order. Shorter code burns less context. It
-takes up less of the window and gets re-processed as input on every later turn,
-so a long session stays cheaper and summarization comes later.
-
-The full arithmetic (the billing model, the measured break-even table, and the
-honest caveats like out-of-distribution names, reasoning tokens, and the
-tokenizer proxy) is on the docs site: **[Does it pay off?](https://smoower.github.io/dotnet-minified/economics.html)**
-(reproduce with `python bench/economics.py`).
-
-## Where it does *not* help (so you can trust the numbers)
-
-No snake oil here. A shortcut only saves cost or time if it
-saves **tokens**, and tokens aren't characters.
-
-- `.Where(` to `.w(` saves **zero tokens**. `Where` is already one token, and so
-  is `.Select(` to `.s(`.
-- `db.SaveChanges()` to `db.saveS()` saves **zero tokens**. The savings on EF
-  come entirely from dropping the long `...Async` names (`SaveChangesAsync`
-  becomes `save`), which is why async is the unmarked default and sync gets the
-  `S` suffix.
-
-The real wins are two things. First, collapsing long PascalCase identifiers that
-tokenize into 3 to 5 sub-tokens (`FirstOrDefaultAsync`, `Task<IActionResult>`,
-`AddScoped`). Second, the result-fusing terminators that delete whole
-`async`/`await`/`return`/`Ok` phrases. The single-letter swaps are mostly there
-to keep the style consistent and the code short to read. They're a nice-to-have,
-not the headline.
-
-Across a whole project, expect roughly **10 to 25%**. Your business logic,
-models, and config don't shrink, only the framework ceremony does.
-
-## Getting started
-
-Two ways in. If you have an AI assistant with tool access (Claude Code, Copilot,
-Cursor), let it do the wiring. Otherwise add the packages by hand — it's three
-small steps.
-
-### Option A — let your AI set it up
-
-Paste **[prompts/setup-prompt.md](prompts/setup-prompt.md)** to your assistant in
-a new or existing repo. It detects the project (or scaffolds a Web API in an
-empty repo), installs the packages the project actually needs — or the default
-ASP.NET backend set when unsure — writes `GlobalUsings.cs`, adds the compact-style
-rules to your `CLAUDE.md` / `.github/copilot-instructions.md`, and builds to
-verify. It's safe to re-run; it only adds what's missing.
-
-> **Claude Code** users can skip the paste: the repo ships a skill at
-> `.claude/skills/smoower-minified/`, so just ask it to *"set up Smoower.Minified
-> in this project."*
-
-### Option B — install by hand
-
-1. Add the packages you need (all `0.3.0`, multi-targeting net8.0 / net9.0 /
-   net10.0). The default set for an ASP.NET Core backend:
-
-   ```bash
-   dotnet add package Smoower.Minified.Core
-   dotnet add package Smoower.Minified.AspNetCore
-   dotnet add package Smoower.Minified.EFCore
-   dotnet add package Smoower.Minified.Hosting
-   dotnet add package Smoower.Minified.Logging
-   dotnet add package Smoower.Minified.Validation
-   ```
-
-   Or, as `PackageReference` entries — take only what you use (see
-   [The packages](#the-packages)):
-
-   ```xml
-   <PackageReference Include="Smoower.Minified.AspNetCore" Version="0.3.0" />
-   <PackageReference Include="Smoower.Minified.EFCore" Version="0.3.0" />
-   ```
-
-2. Drop the imports and aliases into a `GlobalUsings.cs`. Aliases aren't
-   transitive across assemblies, so this lives in *your* project (copy from the
-   [sample](samples/Smoower.Minified.SampleApi/GlobalUsings.cs)):
-
-   ```csharp
-   global using Smoower.Minified.Core;
-   global using Smoower.Minified.AspNetCore;
-   global using Smoower.Minified.EFCore;
-   global using Ctl = Microsoft.AspNetCore.Mvc.ControllerBase;
-   global using Res = Microsoft.AspNetCore.Mvc.IActionResult;
-   global using Tr  = System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult>;
-   global using CT  = System.Threading.CancellationToken;
-   global using Cfg = Microsoft.Extensions.Configuration.IConfiguration;
-   ```
-
-3. Point your AI at the style. **Claude Code:** the repo ships a skill at
-   `.claude/skills/smoower-minified/`, so just ask it to use Smoower.Minified.
-   **GPT / Copilot / Cursor:** paste [prompts/system-prompt.md](prompts/system-prompt.md)
-   as a system prompt or rules file. Short version to drop into any chat:
-
-   > Generate ASP.NET Core / EF Core code using the Smoower.Minified compact
-   > helpers (`[API]`/`[HG]`/`[HPO]`, `:Ctl`, `Tr`, `.w`/`.s`/`.nt`/`.lst`/`.one`,
-   > `db.save`/`db.add`, `ok1`/`okl`/`okId`/`delById`, `nil()`). Code only, no
-   > comments, file-scoped namespaces, primary constructors, records for DTOs.
-   > Never change route templates, status codes, or DTO/JSON names.
-
-## The cheat sheet
-
-| Long | Short |
-| --- | --- |
-| `[ApiController]` `[Route("api/x")]` | `[API]` `[RT("api/x")]` |
-| `[HttpGet]` `[HttpPost]` `[HttpDelete]` ... | `[HG]` `[HPO]` `[HD]` ... |
-| `: ControllerBase` | `:Ctl` |
-| `async Task<IActionResult>` | `Tr` |
-| `.Where` `.Select` `.OrderBy` `.AsNoTracking` `.Include` | `.w` `.s` `.ob` `.nt` `.inc` |
-| `.ToListAsync` `.FirstOrDefaultAsync` `.CountAsync` | `.lst` `.one` `.cnt` |
-| `SaveChangesAsync` `FindAsync` add/update/remove+save | `db.save()` `set.id(k)` `db.add/upd/del` |
-| `x==null ? NotFound() : Ok(x)` over a query | `q.ok1()` (`okl`/`okId`/`okAdd`/`delById`) |
-| `string.IsNullOrWhiteSpace(s)` | `s.nil()` |
-| `LogInformation(...)` | `log.inf(...)` |
-| `services.AddScoped<I,T>()` | `svc.scoped<I,T>()` |
-| `client.GetFromJsonAsync<T>(url)` | `c.getJson<T>(url)` |
-
-Full rules for humans and agents live in [CLAUDE.md](CLAUDE.md).
+On a real task-management API ([`samples/TodoApi`](samples/TodoApi)) the ladder
+measured traditional → smoower → packed at **5049 → 4121 (~18%) → 3785 (~25%)**
+Claude tokens. At every level the contract — routes, status codes, JSON/DB
+*values* — is unchanged; only the in-code handle moves. Full detail on
+[Compaction levels](https://smoower.github.io/dotnet-minified/compaction-levels.html).
 
 ## The packages
 
@@ -301,12 +132,13 @@ take `EFCore` without dragging in ASP.NET Core.
 | `Smoower.Minified.Identity` | short `UserManager`/`SignInManager`/`RoleManager` ops (`create`/`byEmail`/`checkPw`/`pwSignIn`) |
 | `Smoower.Minified.Generators` | opt-in `[Crud<>]` source generator — expands a partial controller into full CRUD *(preview: in-repo, not yet on NuGet)* |
 
+Full breakdown on [Libraries](https://smoower.github.io/dotnet-minified/libraries.html).
+
 ## The one rule: don't compact the contract
 
 This changes how the code is *written*, never what it *does* at runtime. Keep
 route templates, HTTP verbs, status codes, and DTO property/JSON names exactly as
-your API requires. Shortening those silently breaks clients. Shorten the code,
-not the contract.
+your API requires. Shorten the code, not the contract.
 
 ## The minified family
 
@@ -319,35 +151,16 @@ dialect that keeps the contract pays for itself.
   ceremony AI rewrites most. On the roadmap.
 - **Tooling** — a CLI and editor integrations (VS Code) to apply, lint, and
   round-trip the compact style. Planned as a product layer on top of the
-  open libraries.
+  open libraries. See [Tooling](https://smoower.github.io/dotnet-minified/tooling.html).
 
 The libraries stay source-available and free; everything ships under the
 **Smoower** brand for now. Want a runtime covered, or building one? Open an issue.
 
-## What's next
-
-Recently shipped: the `[Crud<>]` source generator, `whereIf`/`paged` query
-terminators, exception aliases (`KNF`/`IOE`), the `Ctl` result helpers
-(`nf`/`un`/`unp`), the `[JPN]`/`[Col]`/`[JSEM]` attribute aliases for L2 short-naming,
-and the `Smoower.Minified.Identity` package. The earlier list — `created()`,
-`[P200]`, `cfg.bind<T>()`, JSON shorteners — all landed.
-
-On the roadmap, in rough order:
-
-- **Pack / expand tooling.** A CLI + VS Code virtual view to round-trip L2/L3:
-  author packed, read expanded, with the `names.map` and the `[Crud<>]` generator
-  as the deterministic expanders. This is what makes L3 practical day-to-day.
-- **More of the framework.** ASP.NET Identity is in; next are the surfaces a real
-  app still writes long — and beyond ASP.NET, other .NET flavors (Blazor, WPF/XAML).
-- **The measured discipline holds:** a shortener ships only if it saves Claude
-  tokens *and* the model reaches for it. Minimal-hosting boilerplate (~0 savings)
-  and cryptic/numeric encodings (no gain on Claude — see `bench/FINDINGS.md` §2)
-  stay rejected.
-
 ## Docs site
 
-The browsable reference at <https://smoower.github.io/dotnet-minified/> is a
-static site under [`docs/`](docs/), generated by [`docs/build.py`](docs/build.py),
-which is the single source of truth for every mapping (re-run it after changing a
-helper). It deploys automatically via [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
-Enable it once under **Settings → Pages → Source: GitHub Actions**.
+The browsable docs at <https://smoower.github.io/dotnet-minified/> are a static
+site under [`docs/`](docs/), generated by [`docs/build.py`](docs/build.py), which
+is the single source of truth for every mapping (re-run it after changing a
+helper). It deploys automatically via
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml). Enable it once under
+**Settings → Pages → Source: GitHub Actions**.

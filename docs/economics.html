@@ -1,33 +1,44 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Smoower.Minified: does it pay off?</title>
 <meta name="description" content="Is compact AI-generated .NET code faster, cheaper, and lighter on context? Measured on real production code.">
 <link rel="stylesheet" href="styles.css">
+<script>(function(){try{var t=localStorage.getItem('sm-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 <div class="layout">
 <aside class="sidebar">
-  <div class="brand"><b>Smoower.Minified</b><span>does it pay off?</span></div>
+  <div class="brand">
+    <a class="name" href="index.html"><b>Smoower<em>.Minified</em></b><span>concepts</span></a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light / dark theme" onclick="(function(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('sm-theme',n);}catch(e){}})()">&#9728;</button>
+  </div>
   <nav>
-<a href="index.html">Overview</a>
-<a href="getting-started.html">Getting started</a>
-<a href="libraries.html">Libraries</a>
+<div class="navgroup">Getting started</div>
+<a href="index.html">Introduction</a>
+<a href="quickstart.html">Quickstart</a>
+<a href="installation.html">Installation</a>
+<div class="navgroup">Concepts</div>
+<a href="compaction-levels.html">Compaction levels</a>
+<a href="how-it-works.html">How it works</a>
 <a href="economics.html" class="active">Does it pay off?</a>
+<div class="navgroup">Reference</div>
+<a href="libraries.html">Libraries</a>
 <a href="cheat-sheet.html">Cheat sheet</a>
+<div class="navgroup">Tooling</div>
+<a href="tooling.html">CLI &amp; editor tooling</a>
   </nav>
 </aside>
 <main class="content" id="top">
 <section>
   <h1>Does it pay off?</h1>
-  <p class="tagline">Faster, cheaper, lighter on context &mdash; and tried on real production code, not toy samples.</p>
-
-  <p class="lead">The promise is simple: an AI that writes less boilerplate writes faster, costs less, and keeps more of its context window free. The question is how much of that survives contact with real code. To find out, Smoower was applied to a slice of a live .NET application &mdash; a handful of production API controllers and a single sprawling EF Core <code>DbContext</code> of nearly two thousand lines &mdash; and the before and after were measured with the model&rsquo;s own tokenizer.</p>
+  <p class="tagline">faster, cheaper, lighter on context &mdash; measured on real production code</p>
+  <p class="lead">The promise is simple: an AI that writes less boilerplate writes faster, costs less, and keeps more of its context window free. To see how much survives contact with real code, Smoower was applied to a slice of a live .NET application &mdash; a handful of production API controllers and a single sprawling EF Core <code>DbContext</code> of nearly two thousand lines &mdash; and the before and after measured with the model&rsquo;s own tokenizer.</p>
 
   <h2>What the real code showed</h2>
-  <p class="lead">The compact form came out meaningfully smaller everywhere it touched framework ceremony. Typical API controllers shrank by roughly a third, and the most boilerplate-heavy of them by nearly half. Even the giant <code>DbContext</code> &mdash; almost entirely schema configuration, the least compressible code there is &mdash; came down by about a quarter once the EF Core configuration helpers were applied. Across the whole sample, on untouched real-world code, the saving landed at around a quarter fewer tokens.</p>
+  <p class="lead">The compact form came out meaningfully smaller everywhere it touched framework ceremony. Typical API controllers shrank by roughly a third, the most boilerplate-heavy by nearly half. Even the giant <code>DbContext</code> &mdash; almost entirely schema configuration &mdash; came down by about a quarter once the EF Core configuration helpers were applied. Across the whole sample, on untouched real-world code, the saving landed around a quarter fewer tokens.</p>
   <div class="stat">
     <div class="box"><div class="n hl">a third to a half</div><div class="l">on typical API controllers</div></div>
     <div class="box"><div class="n hl">about a quarter</div><div class="l">across a whole real-world slice, schema config included</div></div>
@@ -37,20 +48,22 @@
   <p class="lead">Models emit output one token at a time, so the wall-clock time to produce a file tracks its length almost linearly. Halve the ceremony and you roughly halve the time spent streaming it out. The rules prompt is read once, in parallel, and cached &mdash; it barely touches latency. This is the benefit that holds up most cleanly.</p>
 
   <h2>Cheaper &mdash; after a small, one-time cost</h2>
-  <p class="lead">Output tokens are billed, and they cost several times more than input. The compact code emits fewer of them on every file. Against that sits a one-time cost: a short rules prompt the assistant needs in context. It is input rather than output, it is paid once per session, and it caches. On any project that generates more than a file or two, it is recouped quickly &mdash; and everything after is saving.</p>
+  <p class="lead">Output tokens are billed, and they cost several times more than input (around 5&times; on current Claude models). The compact code emits fewer of them on every file. Against that sits a one-time cost: a short rules prompt the assistant needs in context &mdash; input rather than output, paid once per session, and cached. On any project that generates more than a file or two it is recouped quickly, and everything after is saving.</p>
 
-  <h2>Lighter on context &mdash; real, but second-order</h2>
-  <p class="lead">In a long session, everything already written is re-read on every later turn. Code that is a quarter to a half smaller leaves more headroom before the window fills, and makes each subsequent turn a little cheaper. It is the same mechanism as &ldquo;cheaper,&rdquo; compounding over time.</p>
+  <h2>Lighter on context &mdash; compounding over a session</h2>
+  <p class="lead">In a long session, everything already written is re-read on every later turn. Code that is a quarter to a half smaller leaves more headroom before the window fills, makes each subsequent turn a little cheaper, and pushes summarization later. On subscription tools (Claude Pro / Max, Copilot, Cursor) this is where the value lands: more of your codebase fits at once, agents spend less of their budget regenerating ceremony, and you reach usage limits later in the day.</p>
 
-  <h2>Where it does not help &mdash; so the numbers stay honest</h2>
-  <p class="lead">Smoower only shortens framework ceremony. Your domain &mdash; entity and property names, business rules, the logic itself &mdash; is the contract, and it does not shrink, nor should it. That is why a whole project lands at a portion rather than the headline figure: the savings are concentrated in controllers, data access, wiring, and configuration, and diluted by everything that is genuinely your own. It is built for output-heavy, multi-file, multi-turn AI work; for a single hand-edited snippet the rules prompt would cost more than it saves. And throughout, the runtime behaviour is identical &mdash; the compiled IL does not change.</p>
+  <div class="callout info"><strong>The bottom line.</strong> For an assistant generating ASP.NET Core and EF Core code across a session, all three benefits show up on real code: faster (the cleanest win), cheaper (after a sub-one-file break-even), and lighter on context (compounding over turns) &mdash; and the runtime behaviour is identical, since the compiled IL does not change. The full arithmetic and the per-file numbers are in <code>bench/FINDINGS.md</code>.</div>
 
-  <div class="callout">
-    <strong>The bottom line.</strong> For an assistant generating ASP.NET Core and EF Core code across a session, all three benefits are real on real code: faster (the cleanest win), cheaper (after a sub-one-file break-even), and lighter on context (compounding over turns). It is not a trick for one-off edits, and it never changes what your code does.
-  </div>
+  <h2>Where to next</h2>
+<div class="cards">
+<a class="card" href="compaction-levels.html"><div class="t">Compaction levels <span class="arr">&rarr;</span></div><div class="d">How far to push token savings.</div></a>
+<a class="card" href="quickstart.html"><div class="t">Quickstart <span class="arr">&rarr;</span></div><div class="d">Get set up in a few steps.</div></a>
+<a class="card" href="cheat-sheet.html"><div class="t">Cheat sheet <span class="arr">&rarr;</span></div><div class="d">Every long-form to compact mapping.</div></a>
+</div>
 </section>
 <footer>
-  Generated by <code>docs/build.py</code>. Smoower.Minified is source-available under a non-compete license; see <code>LICENSE</code>.
+  Generated by <code>docs/build.py</code> &middot; part of the <code>&middot;minified</code> family &middot; source-available under a non-compete license (see <code>LICENSE</code>).
 </footer>
 </main>
 </div>

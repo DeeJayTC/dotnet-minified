@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smoower.Minified: how it works</title>
+<meta name="description" content="Why the compact form costs fewer tokens, with the same compiled IL.">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){try{var t=localStorage.getItem('sm-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">
+    <a class="name" href="index.html"><b>Smoower<em>.Minified</em></b><span>concepts</span></a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light / dark theme" onclick="(function(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('sm-theme',n);}catch(e){}})()">&#9728;</button>
+  </div>
+  <nav>
+<div class="navgroup">Getting started</div>
+<a href="index.html">Introduction</a>
+<a href="quickstart.html">Quickstart</a>
+<a href="installation.html">Installation</a>
+<div class="navgroup">Concepts</div>
+<a href="compaction-levels.html">Compaction levels</a>
+<a href="how-it-works.html" class="active">How it works</a>
+<a href="economics.html">Does it pay off?</a>
+<div class="navgroup">Reference</div>
+<a href="libraries.html">Libraries</a>
+<a href="cheat-sheet.html">Cheat sheet</a>
+<div class="navgroup">Tooling</div>
+<a href="tooling.html">CLI &amp; editor tooling</a>
+  </nav>
+</aside>
+<main class="content" id="top">
+<section>
+  <h1>How it works</h1>
+  <p class="lead">Smoower saves tokens in two ways: it collapses long identifiers that tokenize into several sub-tokens, and it fuses whole phrases of ceremony into a single call. Everything compiles to the same IL.</p>
+
+  <h2>The bill nobody talks about</h2>
+  <p class="lead">Here is a perfectly normal controller action. Count the ceremony:</p>
+  <pre>[HttpGet("{id}")]
+public async Task&lt;IActionResult&gt; Get(int id)
+{
+    var x = await _db.Users
+        .AsNoTracking()
+        .Where(u =&gt; u.Id == id)
+        .Select(u =&gt; new { u.Id, u.Name, u.Email })
+        .FirstOrDefaultAsync();
+    return x == null ? NotFound() : Ok(x);
+}</pre>
+  <p class="lead"><code>HttpGet</code>, <code>Task&lt;IActionResult&gt;</code>, <code>AsNoTracking</code>, <code>FirstOrDefaultAsync</code>, <code>NotFound</code>, <code>Ok</code> &mdash; none of that is your logic. It is the framework tax, and your assistant pays it again in output tokens on every write, rewrite, and refactor.</p>
+  <p class="lead">The same action with Smoower.Minified:</p>
+  <pre>[HG("{id}")]public Tr Get(int id)=&gt;db.Users.nt().w(x=&gt;x.Id==id).s(x=&gt;new{x.Id,x.Name,x.Email}).ok1();</pre>
+  <p class="lead">One line, same behaviour. <code>ok1()</code> runs the query and returns <code>200</code> with the row, or <code>404</code> if missing &mdash; the exact <code>x == null ? NotFound() : Ok(x)</code>, folded into the call.</p>
+
+  <h2>Where the savings come from</h2>
+  <p class="lead">Two things do the work. First, collapsing long PascalCase identifiers that tokenize into three to five sub-tokens &mdash; <code>FirstOrDefaultAsync</code>, <code>Task&lt;IActionResult&gt;</code>, <code>AddScoped</code> &mdash; into short handles. Second, the result-fusing terminators that delete whole <code>async</code>/<code>await</code>/<code>return</code>/<code>Ok</code> phrases: <code>q.ok1()</code>, <code>q.okl()</code>, <code>set.okId(id)</code>, <code>db.okNew(e)</code>, <code>db.delById&lt;T&gt;(id)</code>.</p>
+  <p class="lead">Dropping the long <code>...Async</code> suffix is why async is the unmarked default and synchronous code takes the <code>S</code> suffix (<code>saveS</code>, <code>idS</code>) &mdash; the common path is the short one. Every mapping is listed on the <a href="cheat-sheet.html">Cheat sheet</a>.</p>
+
+  <h2>Still ordinary C#</h2>
+  <p class="lead">The alias layer (L1) is plain C# extension methods, attributes, and type aliases &mdash; no transpiler, no source generator, the same IL the verbose form produces. You can step through it in a debugger like any other code. The opt-in <code>[Crud&lt;&gt;]</code> generator and the deeper <a href="compaction-levels.html">compaction levels</a> go further when you want them, always keeping the public contract intact.</p>
+
+  <div class="callout"><strong>Never compact the contract.</strong> Route templates, HTTP verbs, status codes, and DTO / JSON names stay exactly as your API requires. Shorten the code, not the contract.</div>
+
+  <h2>Where to next</h2>
+<div class="cards">
+<a class="card" href="compaction-levels.html"><div class="t">Compaction levels <span class="arr">&rarr;</span></div><div class="d">Push the dial further with L2 and L3.</div></a>
+<a class="card" href="cheat-sheet.html"><div class="t">Cheat sheet <span class="arr">&rarr;</span></div><div class="d">Every mapping, grouped by package.</div></a>
+<a class="card" href="economics.html"><div class="t">Does it pay off? <span class="arr">&rarr;</span></div><div class="d">What it saves on real code.</div></a>
+</div>
+</section>
+<footer>
+  Generated by <code>docs/build.py</code> &middot; part of the <code>&middot;minified</code> family &middot; source-available under a non-compete license (see <code>LICENSE</code>).
+</footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,32 +1,58 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Smoower.Minified</title>
 <meta name="description" content="Compact, ordinary C# that cuts the tokens an AI spends on .NET boilerplate.">
 <link rel="stylesheet" href="styles.css">
+<script>(function(){try{var t=localStorage.getItem('sm-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 <div class="layout">
 <aside class="sidebar">
-  <div class="brand"><b>Smoower.Minified</b><span>overview</span></div>
+  <div class="brand">
+    <a class="name" href="index.html"><b>Smoower<em>.Minified</em></b><span>same code, fewer tokens</span></a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light / dark theme" onclick="(function(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('sm-theme',n);}catch(e){}})()">&#9728;</button>
+  </div>
   <nav>
-<a href="index.html" class="active">Overview</a>
-<a href="getting-started.html">Getting started</a>
-<a href="libraries.html">Libraries</a>
+<div class="navgroup">Getting started</div>
+<a href="index.html" class="active">Introduction</a>
+<a href="quickstart.html">Quickstart</a>
+<a href="installation.html">Installation</a>
+<div class="navgroup">Concepts</div>
+<a href="compaction-levels.html">Compaction levels</a>
+<a href="how-it-works.html">How it works</a>
 <a href="economics.html">Does it pay off?</a>
+<div class="navgroup">Reference</div>
+<a href="libraries.html">Libraries</a>
 <a href="cheat-sheet.html">Cheat sheet</a>
+<div class="navgroup">Tooling</div>
+<a href="tooling.html">CLI &amp; editor tooling</a>
   </nav>
 </aside>
 <main class="content" id="top">
 <section>
-  <h1>Smoower.Minified</h1>
-  <p class="tagline">Compact, ordinary C# that cuts the tokens an AI spends on .NET boilerplate.</p>
+  <div class="hero">
+    <h1>Same .NET code. Fewer tokens.</h1>
+    <p class="tagline">same .NET code &middot; fewer tokens &middot; no magic</p>
+    <p class="sub">Smoower.Minified is a set of tiny C# libraries that shrink the boilerplate-heavy parts of a .NET API &mdash; controllers, EF Core queries, DI, logging &mdash; into short, stable forms an AI assistant can emit in a fraction of the tokens. It is ordinary C#: same IL, no transpiler.</p>
+    <div class="badges">
+      <span class="badge brand">.NET 8 &middot; 9 &middot; 10</span>
+      <span class="badge">no transpiler &middot; same IL</span>
+      <span class="badge">source-available</span>
+      <span class="badge">ships as a Claude Code skill</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="quickstart.html">Get started &rarr;</a>
+      <a class="btn ghost" href="compaction-levels.html">Compaction levels</a>
+      <a class="btn ghost" href="cheat-sheet.html">Cheat sheet</a>
+    </div>
+  </div>
 
+  <h2>What it is</h2>
   <p class="lead">When an AI assistant writes ASP.NET Core or EF Core code, most of what it types is not your logic &mdash; it is framework ceremony. <code>Task&lt;IActionResult&gt;</code>, <code>FirstOrDefaultAsync</code>, <code>AddScoped</code>, attribute noise, the same controller scaffolding again and again. Every token of that is generated afresh on each write, rewrite, and refactor.</p>
-
-  <p class="lead">Smoower.Minified swaps that ceremony for short, stable helpers &mdash; <code>Tr</code>, <code>.one()</code>, <code>scoped&lt;&gt;</code>, <code>[HG]</code>, <code>.ok1()</code> &mdash; that compile to the exact same IL. There is no source generator and no transpiler; it is plain C# extension methods, attributes, and type aliases. The behaviour never changes. Only the number of tokens it takes to write the code does.</p>
+  <p class="lead">Smoower.Minified swaps that ceremony for short, stable helpers &mdash; <code>Tr</code>, <code>.one()</code>, <code>scoped&lt;&gt;</code>, <code>[HG]</code>, <code>.ok1()</code> &mdash; that compile to the exact same IL. The alias layer is 100% plain C# extension methods, attributes, and type aliases; an opt-in <code>[Crud&lt;&gt;]</code> source generator and deeper levels go further when you want them. The behaviour never changes. Only the number of tokens it takes to write the code does.</p>
 
   <h2>Why it helps</h2>
   <div class="stat">
@@ -34,31 +60,10 @@
     <div class="box"><div class="n hl">Cheaper</div><div class="l">output tokens are billed, and there are simply fewer of them</div></div>
     <div class="box"><div class="n hl">Lighter</div><div class="l">shorter code leaves more room in the context window over a session</div></div>
   </div>
-
-  <h2>How it pays off</h2>
-  <p class="lead">The token saving is the mechanism; where it actually lands depends on how you pay for your AI &mdash; and it is rarely just a smaller bill. Expect roughly <strong>10&ndash;25% fewer output tokens across a whole project</strong>, and <strong>25&ndash;45% on the boilerplate-heavy controller files</strong> an assistant rewrites most often.</p>
-  <div class="stat">
-    <div class="box"><div class="n hl">10&ndash;25%</div><div class="l">fewer output tokens across a whole project</div></div>
-    <div class="box"><div class="n hl">25&ndash;45%</div><div class="l">on boilerplate-heavy controller files</div></div>
-  </div>
-
-  <h3>If you pay per token (API / metered)</h3>
-  <p class="lead">Generated code is almost entirely <em>output</em> tokens &mdash; the expensive side of the meter, around 5&times; the price of input on current Claude models. Fewer output tokens is a directly smaller invoice, paid back on every write, rewrite, and refactor of the same file.</p>
-
-  <h3>If you pay a subscription (Claude Pro / Max, Copilot, Cursor)</h3>
-  <p class="lead">There is no per-token line item, so the value is operational rather than financial &mdash; and often the bigger deal. Shorter code means more of your codebase fits in the context window at once; agents spend less of their turn and session budget regenerating the same ceremony instead of doing new work; long sessions stay coherent longer before summarization kicks in; and you reach usage or rate limits later in a working day. You are effectively pushing the cap you are paying around further out.</p>
-
-  <div class="callout info"><strong>Either way, it is faster.</strong> Models decode one token at a time, so wall-clock generation time tracks output length almost linearly &mdash; roughly half the tokens is roughly half the wait, whoever is paying.</div>
+  <p class="lead">Expect roughly <strong>10&ndash;25% fewer output tokens across a whole project</strong>, and <strong>25&ndash;45% on the boilerplate-heavy controller files</strong> an assistant rewrites most often. The full arithmetic is on <a href="economics.html">Does it pay off?</a></p>
 
   <h2>What it saves on real code</h2>
-  <p class="lead">Not a toy benchmark &mdash; these are untouched production files from a live .NET app, rewritten in the compact style and measured with Claude&rsquo;s own tokenizer (<code>claude-opus-4-8</code>). On the files that are mostly framework ceremony &mdash; a typical API controller &mdash; the compact form cuts <strong>up to half the tokens</strong>. Spread across a whole application, where most of the code is business logic that does not (and should not) compress, the saving settles at <strong>up to around a quarter</strong>.</p>
-  <div class="stat">
-    <div class="box"><div class="n hl">up to 50%</div><div class="l">fewer tokens on a single API controller</div></div>
-    <div class="box"><div class="n hl">up to 25%</div><div class="l">across a whole app, business logic included</div></div>
-  </div>
-
-  <p class="lead">Each row below is the same file before and after; behaviour and the compiled IL are identical. This slice is deliberately boilerplate-heavy, so it sits near the top of that range. Browse the originals and their <code>.min.cs</code> counterparts in <a href="https://github.com/smoower/dotnet-minified/tree/main/samples/Individual-Samples">samples/Individual-Samples</a>, and the full method in <a href="https://github.com/smoower/dotnet-minified/blob/main/bench/FINDINGS.md">bench/FINDINGS.md</a>.</p>
-
+  <p class="lead">Not a toy benchmark &mdash; these are untouched production files from a live .NET app, rewritten in the compact style and measured with Claude&rsquo;s own tokenizer (<code>claude-opus-4-8</code>). On files that are mostly framework ceremony, the compact form cuts up to half the tokens; spread across a whole application, where most code is business logic that should not compress, the saving settles at up to around a quarter.</p>
   <table>
   <thead><tr><th>File</th><th>Original</th><th>Smoower</th><th>Saved</th></tr></thead>
   <tbody>
@@ -69,24 +74,20 @@
     <tr><td><strong>Total</strong></td><td><strong>46,702</strong></td><td><strong>34,079</strong></td><td><span class="delta pos">&minus;12,623 &middot; 27%</span></td></tr>
   </tbody>
   </table>
+  <p class="lead">At Opus 4.8&rsquo;s rate of <strong>$25 per million output tokens</strong>, emitting this sample the verbose way costs <strong>$1.17</strong>; the compact way costs <strong>$0.85</strong> &mdash; about <strong>$0.32 saved every time</strong> these files are written, and AI-generated code is written, rewritten, and refactored over and over across a project&rsquo;s life.</p>
 
-  <p class="lead">The code Claude writes is billed as <em>output</em> tokens &mdash; the most expensive kind. At Opus 4.8&rsquo;s current rate of <strong>$25 per million output tokens</strong>, emitting this sample the verbose way costs <strong>$1.17</strong>; the compact way costs <strong>$0.85</strong>. That is <strong>~$0.32 saved every single time</strong> these files are written &mdash; and AI-generated code is written, rewritten, and refactored over and over across a project&rsquo;s life.</p>
-  <div class="stat">
-    <div class="box"><div class="n hl">12,623</div><div class="l">output tokens saved on this slice (~27%)</div></div>
-    <div class="box"><div class="n hl">~$0.32</div><div class="l">saved per pass at $25/M output (Opus 4.8)</div></div>
-  </div>
+  <div class="callout"><strong>The one rule: never compact the contract.</strong> Route templates, HTTP verbs, status codes, and DTO / JSON names stay exactly as your API requires. Smoower changes how code is written, never what it does at runtime.</div>
 
-  <h2>The honest trade-off</h2>
-  <p class="lead">The compact form is terser than verbose C#, and at a first glance less familiar to a human reader. The assistant also needs a small rules prompt so it knows the helpers. Neither is free &mdash; but both are paid once and earned back quickly, and what remains is still completely ordinary, debuggable C# that any .NET developer can step through. For AI-heavy projects that is a trade most teams will gladly make. For a one-line script edited by hand, it is not.</p>
-
-  <p class="lead">See whether it pays off for your workload on <a href="economics.html">Does it pay off?</a>, or go straight to <a href="getting-started.html">Getting started</a>.</p>
-
-  <div class="callout">
-    <strong>The one rule: never compact the contract.</strong> Route templates, HTTP verbs, status codes, and DTO / JSON names stay exactly as your API requires. Smoower changes how code is written, never what it does.
-  </div>
+  <h2>Where to next</h2>
+<div class="cards">
+<a class="card" href="quickstart.html"><div class="t">Quickstart <span class="arr">&rarr;</span></div><div class="d">Add the packages and point your assistant at the style.</div></a>
+<a class="card" href="compaction-levels.html"><div class="t">Compaction levels <span class="arr">&rarr;</span></div><div class="d">L1 to L3 — how far to push the dial.</div></a>
+<a class="card" href="how-it-works.html"><div class="t">How it works <span class="arr">&rarr;</span></div><div class="d">Why the compact form costs fewer tokens.</div></a>
+<a class="card" href="cheat-sheet.html"><div class="t">Cheat sheet <span class="arr">&rarr;</span></div><div class="d">Every long-form to compact mapping.</div></a>
+</div>
 </section>
 <footer>
-  Generated by <code>docs/build.py</code>. Smoower.Minified is source-available under a non-compete license; see <code>LICENSE</code>.
+  Generated by <code>docs/build.py</code> &middot; part of the <code>&middot;minified</code> family &middot; source-available under a non-compete license (see <code>LICENSE</code>).
 </footer>
 </main>
 </div>

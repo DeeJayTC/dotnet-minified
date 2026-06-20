@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smoower.Minified: compaction levels</title>
+<meta name="description" content="L1 aliases, L2 mapped names, L3 packed — choose how far to push token savings.">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){try{var t=localStorage.getItem('sm-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">
+    <a class="name" href="index.html"><b>Smoower<em>.Minified</em></b><span>concepts</span></a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light / dark theme" onclick="(function(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('sm-theme',n);}catch(e){}})()">&#9728;</button>
+  </div>
+  <nav>
+<div class="navgroup">Getting started</div>
+<a href="index.html">Introduction</a>
+<a href="quickstart.html">Quickstart</a>
+<a href="installation.html">Installation</a>
+<div class="navgroup">Concepts</div>
+<a href="compaction-levels.html" class="active">Compaction levels</a>
+<a href="how-it-works.html">How it works</a>
+<a href="economics.html">Does it pay off?</a>
+<div class="navgroup">Reference</div>
+<a href="libraries.html">Libraries</a>
+<a href="cheat-sheet.html">Cheat sheet</a>
+<div class="navgroup">Tooling</div>
+<a href="tooling.html">CLI &amp; editor tooling</a>
+  </nav>
+</aside>
+<main class="content" id="top">
+<section>
+  <h1>Compaction levels</h1>
+  <p class="tagline">a dial, not a switch</p>
+  <p class="lead">Smoower.Minified is a dial. You choose how far to push token savings against how readable the code stays on disk. The Claude Code skill <strong>asks which level</strong> before it generates; planned <a href="tooling.html">tooling</a> (a VS Code virtual view + a <code>names.map</code>) restores full readability at the deeper levels. At every level the contract &mdash; routes, status codes, JSON/DB <em>values</em> &mdash; is unchanged; only the in-code handle moves.</p>
+
+  <div class="ladder">
+    <div class="level">
+      <div class="tag">L1 &mdash; Aliases</div>
+      <h3>Short handles for framework ceremony</h3>
+      <p>The smoower short handles plus the optional <code>[Crud&lt;&gt;]</code> generator &mdash; <code>[HG]</code>, <code>:Ctl</code>, <code>Tr</code>, <code>.w</code>/<code>.s</code>/<code>.nt</code>, <code>.ok1()</code>. 100% ordinary C#. Reaches the framework ceremony (roughly 18&ndash;35% on a controller) and stays completely readable in any editor.</p>
+      <div class="meta"><span class="badge on">readable on disk</span><span class="badge">same IL</span><span class="badge">no tooling needed</span></div>
+    </div>
+    <div class="level">
+      <div class="tag">L2 &mdash; Mapped</div>
+      <h3>Short domain names, contract pinned</h3>
+      <p>Short domain identifiers, with the long form pinned once in <code>[JPN]</code>/<code>[Col]</code>/<code>global using</code> and recorded in a <code>names.map</code>. Reaches the business-logic and contract floor, and the saving compounds as the codebase grows: the long name is paid once at the declaration, the short name everywhere it is referenced.</p>
+      <div class="meta"><span class="badge on">readable with tooling</span><span class="badge">contract values unchanged</span></div>
+    </div>
+    <div class="level">
+      <div class="tag">L3 &mdash; Max</div>
+      <h3>Whitespace packed</h3>
+      <p>Everything from L2 with newlines and indentation removed &mdash; the densest form. Authored and read through the planned pack/expand tooling, which round-trips it back to fully formatted C# on the way in.</p>
+      <div class="meta"><span class="badge on">tooling view</span><span class="badge">deterministic round-trip</span></div>
+    </div>
+  </div>
+
+  <h2>The ladder, side by side</h2>
+  <table>
+  <thead><tr><th>Level</th><th>What it adds</th><th>Reaches</th><th>Readable on disk?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>L1 &mdash; Aliases</strong></td><td>smoower short handles + optional <code>[Crud&lt;&gt;]</code> generator</td><td>framework ceremony (~18&ndash;35% on a controller)</td><td>yes</td></tr>
+    <tr><td><strong>L2 &mdash; Mapped</strong></td><td>short domain names, long form pinned in <code>[JPN]</code>/<code>[Col]</code>/<code>global using</code> + a <code>names.map</code></td><td>the business-logic / contract floor; compounds with codebase size</td><td>with tooling</td></tr>
+    <tr><td><strong>L3 &mdash; Max</strong></td><td>whitespace packed &mdash; every newline + indentation removed</td><td>everything</td><td>tooling view</td></tr>
+  </tbody>
+  </table>
+
+  <h2>Measured on a real API</h2>
+  <p class="lead">On a real task-management API (<code>samples/TodoApi</code>) the ladder measured traditional &rarr; smoower &rarr; packed at <strong>5,049 &rarr; 4,121 (~18%) &rarr; 3,785 (~25%)</strong> Claude tokens. Short-naming the hot domain vocabulary (L2) keeps paying as the codebase grows (see <code>bench/FINDINGS.md</code> &sect;4&ndash;6).</p>
+  <div class="stat">
+    <div class="box"><div class="n hl">~18%</div><div class="l">L1 aliases vs traditional</div></div>
+    <div class="box"><div class="n hl">~25%</div><div class="l">packed (L3) vs traditional</div></div>
+    <div class="box"><div class="n hl">compounding</div><div class="l">L2 domain naming, as the codebase grows</div></div>
+  </div>
+
+  <div class="callout info"><strong>Pick by taste.</strong> If you value readable-on-disk above all, stay at L1 &mdash; it is plain C# and needs no tooling. Reach for L2/L3 when raw token count matters most and you are using the <a href="tooling.html">pack/expand tooling</a> that restores readability.</div>
+
+  <h2>Where to next</h2>
+<div class="cards">
+<a class="card" href="tooling.html"><div class="t">Tooling <span class="arr">&rarr;</span></div><div class="d">The pack/expand CLI and VS Code view that make L2/L3 practical.</div></a>
+<a class="card" href="how-it-works.html"><div class="t">How it works <span class="arr">&rarr;</span></div><div class="d">Why the compact form saves tokens.</div></a>
+<a class="card" href="economics.html"><div class="t">Does it pay off? <span class="arr">&rarr;</span></div><div class="d">Faster, cheaper, lighter on context.</div></a>
+</div>
+</section>
+<footer>
+  Generated by <code>docs/build.py</code> &middot; part of the <code>&middot;minified</code> family &middot; source-available under a non-compete license (see <code>LICENSE</code>).
+</footer>
+</main>
+</div>
+</body>
+</html>
