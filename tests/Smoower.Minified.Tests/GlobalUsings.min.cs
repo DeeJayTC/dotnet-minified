@@ -1,0 +1,1 @@
+global using Xunit;global using Smoower.Minified.Testing;global using F = Xunit.FactAttribute;global using Th = Xunit.TheoryAttribute;global using In = Xunit.InlineDataAttribute;global using Mem = Xunit.MemberDataAttribute;

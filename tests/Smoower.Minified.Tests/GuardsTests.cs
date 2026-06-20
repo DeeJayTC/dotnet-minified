@@ -1,29 +1,25 @@
 using Smoower.Minified.Core;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
 public class GuardsTests
 {
-    [Theory]
-    [InlineData(null, true)]
-    [InlineData("", true)]
-    [InlineData("   ", true)]
-    [InlineData("x", false)]
+    [Th]
+    [In(null, true)]
+    [In("", true)]
+    [In("   ", true)]
+    [In("x", false)]
     public void Nil_MatchesIsNullOrWhiteSpace(string? input, bool expected)
-        => Assert.Equal(expected, input.nil());
+        => input.nil().eq(expected);
 
-    [Theory]
-    [InlineData(null, true)]
-    [InlineData("", true)]
-    [InlineData("   ", false)]
-    [InlineData("x", false)]
+    [Th]
+    [In(null, true)]
+    [In("", true)]
+    [In("   ", false)]
+    [In("x", false)]
     public void Emp_MatchesIsNullOrEmpty(string? input, bool expected)
-        => Assert.Equal(expected, input.emp());
+        => input.emp().eq(expected);
 
-    [Fact]
-    public void None_TrueWhenEmpty() => Assert.True(Array.Empty<int>().none());
-
-    [Fact]
-    public void None_FalseWhenAny() => Assert.False(new[] { 1 }.none());
+    [F] public void None_TrueWhenEmpty() => Array.Empty<int>().none().tru();
+    [F] public void None_FalseWhenAny() => new[] { 1 }.none().fls();
 }

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://smoower.github.io/dotnet-minified/
+    about: Quickstart, compaction levels, the economics, and the full cheat sheet.
+  - name: Cheat sheet (every long-form → compact mapping)
+    url: https://smoower.github.io/dotnet-minified/cheat-sheet.html
+    about: Check whether the helper you want already exists before filing.

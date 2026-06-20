@@ -90,6 +90,33 @@
 <tr><td class="long"><code>[ProducesResponseType(StatusCodes.Status400BadRequest)]</code></td><td class="short"><code>[P400]</code></td></tr>
 <tr><td class="long"><code>[ProducesResponseType(StatusCodes.Status404NotFound)]</code></td><td class="short"><code>[P404]</code></td></tr>
 </tbody></table>
+<h2 id="minimalapi">Smoower.Minified.MinimalApi</h2>
+<h3>Route mapping</h3>
+<table><thead><tr><th>Long form</th><th>Compact</th></tr></thead><tbody>
+<tr><td class="long"><code>app.MapGet(&quot;/x&quot;, handler)</code></td><td class="short"><code>app.g(&quot;/x&quot;, handler)</code></td></tr>
+<tr><td class="long"><code>app.MapPost(&quot;/x&quot;, handler)</code></td><td class="short"><code>app.po(&quot;/x&quot;, handler)</code></td></tr>
+<tr><td class="long"><code>app.MapPut(&quot;/x&quot;, handler)</code></td><td class="short"><code>app.pu(&quot;/x&quot;, handler)</code></td></tr>
+<tr><td class="long"><code>app.MapPatch(&quot;/x&quot;, handler)</code></td><td class="short"><code>app.pa(&quot;/x&quot;, handler)</code></td></tr>
+<tr><td class="long"><code>app.MapDelete(&quot;/x&quot;, handler)</code></td><td class="short"><code>app.dl(&quot;/x&quot;, handler)</code></td></tr>
+<tr><td class="long"><code>app.MapGroup(&quot;/users&quot;)</code></td><td class="short"><code>app.grp(&quot;/users&quot;)</code></td></tr>
+<tr><td class="long"><code>.RequireAuthorization()</code></td><td class="short"><code>.auth()</code></td></tr>
+<tr><td class="long"><code>.AllowAnonymous()</code></td><td class="short"><code>.anon()</code></td></tr>
+</tbody></table>
+<h3>Aliases</h3>
+<table><thead><tr><th>Long form</th><th>Compact</th></tr></thead><tbody>
+<tr><td class="long"><code>Microsoft.AspNetCore.Http.Results</code></td><td class="short"><code>R</code></td></tr>
+<tr><td class="long"><code>Task&lt;IResult&gt;</code></td><td class="short"><code>Ir</code></td></tr>
+</tbody></table>
+<h3>Result-fusing terminators (IResult)</h3>
+<table><thead><tr><th>Long form</th><th>Compact</th></tr></thead><tbody>
+<tr><td class="long"><code>var x=await q.FirstOrDefaultAsync();return x is null?Results.NotFound():Results.Ok(x);</code></td><td class="short"><code>q.ok1()</code></td></tr>
+<tr><td class="long"><code>Results.Ok(await q.ToListAsync())</code></td><td class="short"><code>q.okl()</code></td></tr>
+<tr><td class="long"><code>Results.Ok(await q.CountAsync())</code></td><td class="short"><code>q.okc()</code></td></tr>
+<tr><td class="long"><code>var x=await set.FindAsync(id);return x is null?Results.NotFound():Results.Ok(x);</code></td><td class="short"><code>set.okId(id)</code></td></tr>
+<tr><td class="long"><code>db.Add(e);await db.SaveChangesAsync();return Results.Created((string?)null,e);</code></td><td class="short"><code>db.okNew(e)</code></td></tr>
+<tr><td class="long"><code>Results.Created((string?)null, value)</code></td><td class="short"><code>value.created()</code></td></tr>
+<tr><td class="long"><code>FindAsync+NotFound+Remove+SaveChanges+NoContent</code></td><td class="short"><code>db.delById&lt;User&gt;(id)</code></td></tr>
+</tbody></table>
 <h2 id="efcore">Smoower.Minified.EFCore</h2>
 <h3>Query — composition</h3>
 <table><thead><tr><th>Long form</th><th>Compact</th></tr></thead><tbody>
@@ -226,6 +253,38 @@
 <tr><td class="long"><code>c.QuerySingleOrDefaultAsync&lt;T&gt;(sql, p)</code></td><td class="short"><code>c.qs&lt;T&gt;(sql, p)</code></td></tr>
 <tr><td class="long"><code>c.ExecuteAsync(sql, p)</code></td><td class="short"><code>c.ex(sql, p)</code></td></tr>
 <tr><td class="long"><code>c.ExecuteScalarAsync&lt;T&gt;(sql, p)</code></td><td class="short"><code>c.scalar&lt;T&gt;(sql, p)</code></td></tr>
+</tbody></table>
+<h2 id="testing">Smoower.Minified.Testing</h2>
+<h3>Assertions (over xUnit, actual-first)</h3>
+<table><thead><tr><th>Long form</th><th>Compact</th></tr></thead><tbody>
+<tr><td class="long"><code>Assert.Equal(expected, actual)</code></td><td class="short"><code>actual.eq(expected)</code></td></tr>
+<tr><td class="long"><code>Assert.NotEqual(expected, actual)</code></td><td class="short"><code>actual.neq(expected)</code></td></tr>
+<tr><td class="long"><code>Assert.Equal(expected, actual)  // collections</code></td><td class="short"><code>actual.eqSeq(expected)</code></td></tr>
+<tr><td class="long"><code>Assert.True(x)</code></td><td class="short"><code>x.tru()</code></td></tr>
+<tr><td class="long"><code>Assert.False(x)</code></td><td class="short"><code>x.fls()</code></td></tr>
+<tr><td class="long"><code>Assert.Null(x)</code></td><td class="short"><code>x.nul()</code></td></tr>
+<tr><td class="long"><code>Assert.NotNull(x)</code></td><td class="short"><code>x.notNul()</code></td></tr>
+<tr><td class="long"><code>Assert.IsType&lt;T&gt;(x)</code></td><td class="short"><code>x.isType&lt;T&gt;()</code></td></tr>
+<tr><td class="long"><code>Assert.IsAssignableFrom&lt;T&gt;(x)</code></td><td class="short"><code>x.isAssignable&lt;T&gt;()</code></td></tr>
+<tr><td class="long"><code>Assert.Same(expected, actual)</code></td><td class="short"><code>actual.same(expected)</code></td></tr>
+<tr><td class="long"><code>Assert.NotSame(expected, actual)</code></td><td class="short"><code>actual.notSame(expected)</code></td></tr>
+<tr><td class="long"><code>Assert.Empty(xs)</code></td><td class="short"><code>xs.empty()</code></td></tr>
+<tr><td class="long"><code>Assert.NotEmpty(xs)</code></td><td class="short"><code>xs.notEmpty()</code></td></tr>
+<tr><td class="long"><code>Assert.Single(xs)</code></td><td class="short"><code>xs.sole()</code></td></tr>
+<tr><td class="long"><code>Assert.Equal(n, xs.Count())</code></td><td class="short"><code>xs.len(n)</code></td></tr>
+<tr><td class="long"><code>Assert.Contains(item, xs)</code></td><td class="short"><code>xs.contains(item)</code></td></tr>
+<tr><td class="long"><code>Assert.Contains(xs, x =&gt; pred)</code></td><td class="short"><code>xs.has(x =&gt; pred)</code></td></tr>
+<tr><td class="long"><code>Assert.Contains(sub, str)</code></td><td class="short"><code>str.hasText(sub)</code></td></tr>
+<tr><td class="long"><code>Assert.InRange(x, lo, hi)</code></td><td class="short"><code>x.inRange(lo, hi)</code></td></tr>
+<tr><td class="long"><code>Assert.Throws&lt;TEx&gt;(act)</code></td><td class="short"><code>act.throws&lt;TEx&gt;()</code></td></tr>
+<tr><td class="long"><code>Assert.ThrowsAsync&lt;TEx&gt;(act)</code></td><td class="short"><code>act.throwsAsync&lt;TEx&gt;()</code></td></tr>
+</tbody></table>
+<h3>Attribute aliases (re-declare in your test GlobalUsings)</h3>
+<table><thead><tr><th>Long form</th><th>Compact</th></tr></thead><tbody>
+<tr><td class="long"><code>[Fact]</code></td><td class="short"><code>[F]</code></td></tr>
+<tr><td class="long"><code>[Theory]</code></td><td class="short"><code>[Th]</code></td></tr>
+<tr><td class="long"><code>[InlineData(...)]</code></td><td class="short"><code>[In(...)]</code></td></tr>
+<tr><td class="long"><code>[MemberData(...)]</code></td><td class="short"><code>[Mem(...)]</code></td></tr>
 </tbody></table>
 </section>
 <footer>

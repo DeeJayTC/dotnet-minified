@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(SmoowerLibTargets)</TargetFrameworks>
+    <PackageId>Smoower.Minified.MinimalApi</PackageId>
+    <Description>Compact ASP.NET Core Minimal API helpers: short verb mappers (g/po/pu/pa/dl/grp), auth/anon convention shorteners, and result-fusing IResult terminators (ok1/okl/okId/okAdd/okNew/delById) for AI-generated endpoints.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Smoower.Minified.Core\Smoower.Minified.Core.csproj" />
+    <ProjectReference Include="..\Smoower.Minified.EFCore\Smoower.Minified.EFCore.csproj" />
+  </ItemGroup>
+
+</Project>

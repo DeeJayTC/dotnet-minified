@@ -38,6 +38,7 @@
   <table><thead><tr><th>Package</th><th>What it covers</th></tr></thead><tbody>
 <tr><td><code>Smoower.Minified.Core</code></td><td>Guards (nil/emp/none) and the base type aliases. Zero web or EF dependency, so everything else sits on top of it.</td></tr>
 <tr><td><code>Smoower.Minified.AspNetCore</code></td><td>Compact MVC attributes, type aliases, and the result-fusing terminators that turn a controller action into a single expression.</td></tr>
+<tr><td><code>Smoower.Minified.MinimalApi</code></td><td>Minimal API route mappers (g/po/pu/pa/dl/grp), auth/anon convention shorteners, and IResult result-fusing terminators for endpoint handlers.</td></tr>
 <tr><td><code>Smoower.Minified.EFCore</code></td><td>EF Core query and write helpers, plus model-configuration helpers for OnModelCreating.</td></tr>
 <tr><td><code>Smoower.Minified.Extensions</code></td><td>Helpers over core .NET / BCL types: an injectable Clock, DateTime and TimeSpan shorteners, and environment-variable access.</td></tr>
 <tr><td><code>Smoower.Minified.Hosting</code></td><td>Dependency-injection registration and resolution helpers over IServiceCollection / IServiceProvider.</td></tr>
@@ -47,6 +48,7 @@
 <tr><td><code>Smoower.Minified.Json</code></td><td>System.Text.Json round-trip helpers. A Newtonsoft variant ships the identical surface.</td></tr>
 <tr><td><code>Smoower.Minified.Redis</code></td><td>StackExchange.Redis helpers on IDatabase, with JSON value helpers.</td></tr>
 <tr><td><code>Smoower.Minified.Dapper</code></td><td>Compact Dapper helpers on IDbConnection for projects not using EF Core.</td></tr>
+<tr><td><code>Smoower.Minified.Testing</code></td><td>Fluent, actual-first xUnit assertion shorteners (eq/neq/tru/notNul/isType/throws) plus the F/Th/In attribute aliases for AI-generated tests.</td></tr>
 <tr><td><code>Smoower.Minified.EFCore.* providers</code></td><td>Thin registration helpers for the InMemory, Sqlite, Npgsql, and SqlServer providers (mem/sqlite/pg/sql).</td></tr>
   </tbody></table>
   <div class="callout info"><strong>Want to see your favourite library here?</strong> Smoower grows by the libraries its users lean on. If there is a package you would like covered, <a href="https://github.com/smoower/dotnet-minified/issues">open an issue and let us know</a>.</div>

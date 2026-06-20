@@ -1,6 +1,5 @@
 using StackExchange.Redis;
 using Smoower.Minified.Redis;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -9,18 +8,18 @@ namespace Smoower.Minified.Tests;
 // IDatabase) so refactors can't silently change the compact API.
 public class RedisSurfaceTests
 {
-    [Theory]
-    [InlineData("get")]
-    [InlineData("set")]
-    [InlineData("del")]
-    [InlineData("incr")]
-    [InlineData("getJson")]
-    [InlineData("setJson")]
+    [Th]
+    [In("get")]
+    [In("set")]
+    [In("del")]
+    [In("incr")]
+    [In("getJson")]
+    [In("setJson")]
     public void Helper_Exists_AsExtensionOnIDatabase(string name)
     {
         var method = typeof(RedisExtensions).GetMethod(name);
-        Assert.NotNull(method);
-        Assert.True(method!.IsStatic);
-        Assert.Equal(typeof(IDatabase), method.GetParameters()[0].ParameterType);
+        method.notNul();
+        method!.IsStatic.tru();
+        method.GetParameters()[0].ParameterType.eq(typeof(IDatabase));
     }
 }

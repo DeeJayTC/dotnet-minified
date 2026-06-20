@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using Smoower.Minified.Logging;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -15,17 +14,17 @@ public class LogExtensionsTests
             => Entries.Add((level, formatter(state, ex)));
     }
 
-    [Fact]
+    [F]
     public void Inf_LogsInformationWithFormattedMessage()
     {
         var log = new CapturingLogger();
         log.inf("hello {Name}", "ada");
-        Assert.Single(log.Entries);
-        Assert.Equal(LogLevel.Information, log.Entries[0].Level);
-        Assert.Equal("hello ada", log.Entries[0].Message);
+        log.Entries.sole();
+        log.Entries[0].Level.eq(LogLevel.Information);
+        log.Entries[0].Message.eq("hello ada");
     }
 
-    [Fact]
+    [F]
     public void WrnErrDbg_LogAtExpectedLevels()
     {
         var log = new CapturingLogger();
@@ -33,8 +32,7 @@ public class LogExtensionsTests
         log.err("e");
         log.err(new InvalidOperationException("boom"), "e2");
         log.dbg("d");
-        Assert.Equal(
-            new[] { LogLevel.Warning, LogLevel.Error, LogLevel.Error, LogLevel.Debug },
-            log.Entries.Select(e => e.Level));
+        log.Entries.Select(e => e.Level)
+            .eqSeq(new[] { LogLevel.Warning, LogLevel.Error, LogLevel.Error, LogLevel.Debug });
     }
 }

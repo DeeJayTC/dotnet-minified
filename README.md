@@ -8,9 +8,9 @@
               same .NET code · fewer tokens · no magic
 </pre></div>
 
-<p align="center"><strong>Your AI pays by the token. ASP.NET Core makes it pay a lot — Smoower.Minified makes it pay less.</strong></p>
+<p align="center"><strong>Your AI pays by the token. ASP.NET Core makes it pay a lot. Smoower.Minified makes it pay less.</strong></p>
 
-<p align="center">part of the <code>·minified</code> family — <strong>dotnet</strong> today · react · vue · tooling next</p>
+<p align="center">part of the <code>·minified</code> family — <strong>dotnet</strong> today, react / vue / tooling next</p>
 
 <p align="center">
   <a href="https://github.com/smoower/dotnet-minified/actions/workflows/ci.yml"><img src="https://github.com/smoower/dotnet-minified/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -33,22 +33,17 @@
 
 ---
 
-Smoower.Minified is a set of tiny C# libraries that shrink the boilerplate-heavy
-parts of a .NET API (controllers, EF Core queries, DI, logging) into short,
-stable forms. The alias layer (L1) is 100% ordinary C# — no transpiler, no magic,
-same IL, fewer tokens. An opt-in `[Crud<>]` source generator and the deeper L2/L3
-levels go further when you want them, always keeping the public contract intact.
+Smoower.Minified is a set of small C# libraries that strip the boilerplate out of .NET APIs (controllers, EF Core queries, DI, logging) and replace it with short, stable forms your AI can type in far fewer tokens.
 
-It cuts the **output tokens** an AI emits for .NET code by roughly **10–25% across
-a whole project**, and **25–45% in boilerplate-heavy controller files** — which
-means faster generation, a smaller bill on metered billing, and more headroom in
-the context window on subscription tools. It's ordinary C#, so none of this costs
-you any runtime behavior.
+It's plain C#. Same IL, no transpiler, no magic. The code just gets shorter.
 
-📖 **Full documentation — getting started, compaction levels, the per-mapping
-cheat sheet, and the economics: <https://smoower.github.io/dotnet-minified/>**
+Across a project that's roughly **10-25% fewer output tokens**, and **25-45%** on the controller files an assistant rewrites most. Fewer tokens means faster generation, a smaller bill, and more room in the context window. Nothing about runtime behavior changes.
 
-## Get started in seconds
+The saving also compounds. An agent doesn't write a file once, it reads and rewrites it on every step of the loop, and each smaller step feeds the next.
+
+Full docs, the per-mapping cheat sheet, and the economics: **<https://smoower.github.io/dotnet-minified/>**
+
+## Get started
 
 ```bash
 # 1 — add the packages (ASP.NET Core backend set)
@@ -63,14 +58,11 @@ dotnet add package Smoower.Minified.EFCore
 #     Copilot / Cursor / GPT → paste prompts/system-prompt.md
 ```
 
-That's it — your next controller comes out compact. Full walkthrough (let your
-AI wire it, or do it by hand) in the
-**[Quickstart](https://smoower.github.io/dotnet-minified/quickstart.html)** and
-**[Installation](https://smoower.github.io/dotnet-minified/installation.html)**
-guides.
+Your next controller comes out compact. The [Quickstart](https://smoower.github.io/dotnet-minified/quickstart.html) and [Installation](https://smoower.github.io/dotnet-minified/installation.html) guides cover the AI-wired and by-hand paths.
 
-Here's the same controller action, hand-written and with Smoower.Minified —
-identical behavior, identical compiled IL:
+## What it looks like
+
+Same action, hand-written and with Smoower.Minified. Identical behavior, identical compiled IL.
 
 ```csharp
 [HttpGet("{id}")]
@@ -89,78 +81,57 @@ public async Task<IActionResult> Get(int id)
 [HG("{id}")]public Tr Get(int id)=>db.Users.nt().w(x=>x.Id==id).s(x=>new{x.Id,x.Name,x.Email}).ok1();
 ```
 
-One line, same behavior. `ok1()` runs the query and returns `200` with the row,
-or `404` if it's missing. Why this saves tokens is on
-[How it works](https://smoower.github.io/dotnet-minified/how-it-works.html); every
-mapping is on the [Cheat sheet](https://smoower.github.io/dotnet-minified/cheat-sheet.html).
+`ok1()` runs the query and returns `200` with the row, or `404` if it's missing. The [Cheat sheet](https://smoower.github.io/dotnet-minified/cheat-sheet.html) lists every mapping.
 
 ## Compaction levels
 
-Smoower.Minified is a dial, not a switch. Pick by how much you value
-readable-on-disk vs raw token count — the Claude Code skill asks you which level
-before it generates.
+It's a dial, not a switch. Pick how much you trade readable-on-disk for raw token count. The Claude Code skill asks which level before it generates.
 
 | Level | What it adds | Readable on disk? |
 | --- | --- | --- |
 | **L1 — Aliases** | smoower short handles + optional `[Crud<>]` generator | yes |
 | **L2 — Mapped** | short domain names, long form pinned in `[JPN]`/`[Col]`/`global using` + a `names.map` | with tooling |
-| **L3 — Max** | whitespace packed — every newline + indentation removed | tooling view |
+| **L3 — Max** | whitespace packed, every newline and indent removed | tooling view |
 
-On a real task-management API ([`samples/TodoApi`](samples/TodoApi)) the ladder
-measured traditional → smoower → packed at **5049 → 4121 (~18%) → 3785 (~25%)**
-Claude tokens. At every level the contract — routes, status codes, JSON/DB
-*values* — is unchanged; only the in-code handle moves. Full detail on
-[Compaction levels](https://smoower.github.io/dotnet-minified/compaction-levels.html).
+On a real task-management API ([`samples/TodoApi`](samples/TodoApi)) the ladder went **5049 → 4121 (~18%) → 3785 (~25%)** Claude tokens. The contract (routes, status codes, JSON/DB values) stays fixed at every level. More on [Compaction levels](https://smoower.github.io/dotnet-minified/compaction-levels.html).
 
-## The packages
+## Packages
 
-Pick only what you use. The data and web layers are split so a console worker can
-take `EFCore` without dragging in ASP.NET Core.
+Take only what you use. Data and web layers are split, so a console worker can reference `EFCore` without pulling in ASP.NET Core.
 
 | Package | What |
 | --- | --- |
-| `Smoower.Minified.Core` | guards (`nil`/`emp`/`none`) plus base aliases, zero framework deps |
+| `Smoower.Minified.Core` | guards (`nil`/`emp`/`none`) and base aliases, zero framework deps |
 | `Smoower.Minified.AspNetCore` | attributes, MVC aliases, result-fusing terminators |
+| `Smoower.Minified.MinimalApi` | verb mappers (`g`/`po`/`pu`/`pa`/`dl`/`grp`), `auth`/`anon`, `IResult` terminators |
 | `Smoower.Minified.EFCore` | query + write helpers (async default, `S`-suffixed sync) |
 | `Smoower.Minified.Http` | `HttpClient` JSON helpers |
 | `Smoower.Minified.Redis` | StackExchange.Redis helpers |
 | `Smoower.Minified.Logging` | `ILogger` helpers |
 | `Smoower.Minified.Hosting` | DI registration helpers |
-| `Smoower.Minified.Validation` | `MiniValidator<T>` + `req`/`rule`/`max`/`email`/`gt` over FluentValidation |
-| `Smoower.Minified.Json` | `toJson`/`fromJson<T>` (System.Text.Json; Newtonsoft variant available) |
+| `Smoower.Minified.Validation` | `MiniValidator<T>` over FluentValidation |
+| `Smoower.Minified.Json` | `toJson`/`fromJson<T>` (System.Text.Json or Newtonsoft) |
 | `Smoower.Minified.Dapper` | `q`/`q1`/`ex`/`scalar` over `IDbConnection` |
-| `Smoower.Minified.Identity` | short `UserManager`/`SignInManager`/`RoleManager` ops (`create`/`byEmail`/`checkPw`/`pwSignIn`) |
-| `Smoower.Minified.Generators` | opt-in `[Crud<>]` source generator — expands a partial controller into full CRUD *(preview: in-repo, not yet on NuGet)* |
+| `Smoower.Minified.Testing` | fluent xUnit assertions (`eq`/`notNul`/`isType`/`throws`) + `[F]`/`[Th]`/`[In]` aliases |
+| `Smoower.Minified.Identity` | short `UserManager`/`SignInManager`/`RoleManager` ops |
+| `Smoower.Minified.Generators` | opt-in `[Crud<>]` source generator *(preview, not yet on NuGet)* |
 
 Full breakdown on [Libraries](https://smoower.github.io/dotnet-minified/libraries.html).
 
 ## The one rule: don't compact the contract
 
-This changes how the code is *written*, never what it *does* at runtime. Keep
-route templates, HTTP verbs, status codes, and DTO property/JSON names exactly as
-your API requires. Shorten the code, not the contract.
+This changes how the code is written, never what it does. Route templates, HTTP verbs, status codes, and DTO/JSON names stay exactly as your API requires. Shorten the code, not the contract.
 
 ## The minified family
 
-`dotnet-minified` is the first of a family. The premise generalizes: anywhere an
-AI assistant pays by the token to re-emit framework ceremony, a stable compact
-dialect that keeps the contract pays for itself.
+`dotnet-minified` is the first of a family. Anywhere an AI pays by the token to re-emit framework ceremony, a stable compact dialect that keeps the contract pays for itself.
 
 - **`dotnet-minified`** — ASP.NET Core / EF Core. Shipping today. *(this repo)*
-- **`react-minified`, `vue-minified`, …** — the same idea for the front-end
-  ceremony AI rewrites most. On the roadmap.
-- **Tooling** — a CLI and editor integrations (VS Code) to apply, lint, and
-  round-trip the compact style. Planned as a product layer on top of the
-  open libraries. See [Tooling](https://smoower.github.io/dotnet-minified/tooling.html).
+- **`react-minified`, `vue-minified`, …** — same idea for front-end ceremony. On the roadmap.
+- **Tooling** — a CLI and VS Code integration to apply, lint, and round-trip the compact style. Planned on top of the open libraries.
 
-The libraries stay source-available and free; everything ships under the
-**Smoower** brand for now. Want a runtime covered, or building one? Open an issue.
+The libraries stay source-available and free. Want a runtime covered, or building one? Open an issue.
 
 ## Docs site
 
-The browsable docs at <https://smoower.github.io/dotnet-minified/> are a static
-site under [`docs/`](docs/), generated by [`docs/build.py`](docs/build.py), which
-is the single source of truth for every mapping (re-run it after changing a
-helper). It deploys automatically via
-[`.github/workflows/pages.yml`](.github/workflows/pages.yml). Enable it once under
-**Settings → Pages → Source: GitHub Actions**.
+The docs at <https://smoower.github.io/dotnet-minified/> are a static site under [`docs/`](docs/), generated by [`docs/build.py`](docs/build.py) (the single source of truth for every mapping, re-run it after changing a helper). It deploys via [`.github/workflows/pages.yml`](.github/workflows/pages.yml). Enable it once under **Settings → Pages → Source: GitHub Actions**.

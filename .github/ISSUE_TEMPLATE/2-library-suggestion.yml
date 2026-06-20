@@ -1,0 +1,51 @@
+name: Library suggestion
+description: Suggest a library or framework Smoower.Minified should add compact helpers for.
+labels: ["library-suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Smoower grows by the libraries its users lean on. The bar is deliberate:
+        **a shortener ships only when it measurably saves Claude tokens *and* the model
+        reaches for it.** The strongest suggestions show the token-heavy ceremony an AI
+        re-emits over and over.
+  - type: input
+    id: library
+    attributes:
+      label: Library or framework
+      placeholder: "e.g. MediatR, MassTransit, Blazor components, NodaTime"
+    validations:
+      required: true
+  - type: textarea
+    id: ceremony
+    attributes:
+      label: The ceremony it makes an AI re-type
+      description: What boilerplate shows up again and again? Paste a representative long-form snippet.
+      render: csharp
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed compact form
+      description: Long-form → the short form you'd want. Rough is fine; we'll measure it.
+      render: csharp
+  - type: dropdown
+    id: reach
+    attributes:
+      label: How often is this written?
+      options:
+        - Everywhere — most projects in this space write it constantly
+        - Common — shows up in many projects
+        - Niche — specific scenarios
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched existing issues for this library.
+          required: true
+        - label: The contract (public API names, wire/DB names) would stay unchanged — only how the code is written gets shorter.
+          required: true

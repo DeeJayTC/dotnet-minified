@@ -1,52 +1,51 @@
 using Smoower.Minified.Extensions;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
 public class ExtensionsTests
 {
-    [Fact]
+    [F]
     public void IntFactories_BuildTimeSpans()
     {
-        Assert.Equal(TimeSpan.FromMilliseconds(250), 250.ms());
-        Assert.Equal(TimeSpan.FromSeconds(30), 30.secs());
-        Assert.Equal(TimeSpan.FromMinutes(5), 5.mins());
-        Assert.Equal(TimeSpan.FromHours(2), 2.hrs());
-        Assert.Equal(TimeSpan.FromDays(7), 7.days());
+        250.ms().eq(TimeSpan.FromMilliseconds(250));
+        30.secs().eq(TimeSpan.FromSeconds(30));
+        5.mins().eq(TimeSpan.FromMinutes(5));
+        2.hrs().eq(TimeSpan.FromHours(2));
+        7.days().eq(TimeSpan.FromDays(7));
     }
 
-    [Fact]
+    [F]
     public void Clock_ReflectsNow()
     {
         var before = DateTime.UtcNow.AddSeconds(-1);
         var c = new Clock();
-        Assert.InRange(c.utc, before, DateTime.UtcNow.AddSeconds(1));
-        Assert.True(c.unix > 0);
-        Assert.Equal(DateOnly.FromDateTime(DateTime.UtcNow), c.today);
+        c.utc.inRange(before, DateTime.UtcNow.AddSeconds(1));
+        (c.unix > 0).tru();
+        c.today.eq(DateOnly.FromDateTime(DateTime.UtcNow));
     }
 
-    [Fact]
+    [F]
     public void Clk_StaticMirror()
     {
-        Assert.True(Clk.unix > 0);
-        Assert.Equal(DateOnly.FromDateTime(DateTime.UtcNow), Clk.today);
+        (Clk.unix > 0).tru();
+        Clk.today.eq(DateOnly.FromDateTime(DateTime.UtcNow));
     }
 
-    [Fact]
+    [F]
     public void Env_RoundTrips()
     {
         Env.set("SMOOWER_TEST_VAR", "hello");
-        Assert.Equal("hello", Env.get("SMOOWER_TEST_VAR"));
+        Env.get("SMOOWER_TEST_VAR").eq("hello");
     }
 
-    [Fact]
+    [F]
     public void DateExtensions_MatchBcl()
     {
         var dt = new DateTime(2026, 6, 19, 13, 45, 0, DateTimeKind.Utc);
-        Assert.Equal(dt.ToShortDateString(), dt.sd());
-        Assert.Equal(dt.ToLongDateString(), dt.ld());
-        Assert.Equal(dt.ToShortTimeString(), dt.st());
-        Assert.Equal(dt.ToLongTimeString(), dt.lt());
-        Assert.Equal(dt.ToUniversalTime(), dt.utc());
+        dt.sd().eq(dt.ToShortDateString());
+        dt.ld().eq(dt.ToLongDateString());
+        dt.st().eq(dt.ToShortTimeString());
+        dt.lt().eq(dt.ToLongTimeString());
+        dt.utc().eq(dt.ToUniversalTime());
     }
 }

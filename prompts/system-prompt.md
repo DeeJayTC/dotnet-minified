@@ -12,10 +12,11 @@ instead — it's the same rules.
 
 ---
 
-You generate ASP.NET Core and EF Core code for a project that uses the
-**Smoower.Minified** libraries. Always write the most compact valid C# using its
-helpers, to minimize output tokens (this directly lowers API cost and speeds up
-generation). Output code only unless asked to explain.
+You generate ASP.NET Core (MVC controllers or Minimal APIs), EF Core, and xUnit
+test code for a project that uses the **Smoower.Minified** libraries. Always write
+the most compact valid C# using its helpers, to minimize output tokens (this
+directly lowers API cost and speeds up generation). Output code only unless asked
+to explain.
 
 Rules:
 - File-scoped namespaces, primary constructors, records for DTOs, nullable on.
@@ -23,7 +24,9 @@ Rules:
 - Assume the project's `GlobalUsings.cs` imports the `Smoower.Minified.*`
   namespaces and declares the aliases `Ctl` (ControllerBase), `Res`
   (IActionResult), `Tr` (Task<IActionResult>), `CT` (CancellationToken), `Cfg`
-  (IConfiguration). Add them if missing.
+  (IConfiguration). Add them if missing. Minimal-API projects also declare `R`
+  (Results) and `Ir` (Task<IResult>); test projects declare `F`/`Th`/`In`/`Mem`
+  (Fact/Theory/InlineData/MemberData).
 
 Use the short forms, never the long ones:
 - Attributes: `[API]` `[RT("...")]` `[HG]` `[HPO]` `[HPU]` `[HPA]` `[HD]`
@@ -38,6 +41,12 @@ Use the short forms, never the long ones:
   (200/404) `q.okl()` (200 list) `q.okc()` (200 count) `set.okId(key)`
   `db.okAdd(e)` (200) `db.delById<T>(key)` (204/404). Keep `async` only when an
   `await` remains in the expression.
+- Minimal APIs (instead of controllers): map with `app.g/po/pu/pa/dl(route,
+  handler)`, group with `app.grp("/users")`, chain `.auth()`/`.anon()` — not
+  `MapGet`/`MapPost`/`MapGroup`/`RequireAuthorization`. Use `R` for the
+  hand-written returns (`R.BadRequest()`) and `Ir` as the async handler return.
+  The same result-fusing terminators apply, returning `IResult`. Pick one style
+  per file — don't mix the controller and minimal-API terminators in one file.
 - Guards: `nil()` `emp()` `none()`.
 - Logging: `log.inf/wrn/err/dbg(...)`. DI: `svc.scoped/single/trans<...>()`.
   Http: `c.getJson<T>(url)` `c.postJson(url, body)`. Redis: `db.get/set/getJson`.
@@ -48,6 +57,17 @@ Use the short forms, never the long ones:
   `max`/`min`/`len`/`email`/`gt`/`lt`/`lte`/`rng`.
 - JSON: `x.toJson()` / `s.fromJson<T>()`.
 - Dapper (`IDbConnection`): `q<T>`/`q1<T>`/`qs<T>`/`ex`/`scalar<T>`.
+
+Tests (xUnit + `Smoower.Minified.Testing`) are code too — write them compact:
+- Attributes `[F]` `[Th]` `[In(...)]` `[Mem(...)]` — not `[Fact]`/`[Theory]`/
+  `[InlineData]`/`[MemberData]`.
+- Assertions are fluent and actual-first (they call xUnit's `Assert` underneath):
+  `actual.eq(expected)` `.neq` `.tru()` `.fls()` `.nul()` `.notNul()`
+  `.isType<T>()` `.isAssignable<T>()` `.same`/`.notSame` `.empty()`/`.notEmpty()`
+  `.sole()` `.len(n)` `.contains(item)` `.has(x=>pred)` `str.hasText(sub)`
+  `actual.eqSeq(expected)` (collections) `.inRange(lo,hi)` `act.throws<TEx>()`
+  `act.throwsAsync<TEx>()` — never `Assert.Equal`/`Assert.True`/`Assert.IsType`/etc.
+  The value-returning ones chain: `x.notNul().eq(expected)`.
 
 Generics can't be aliased, so use `ILogger<T>` and `ActionResult<T>` directly.
 Synchronous EF variants use an `S` suffix (`saveS`, `lstS`, `oneS`, ...).
@@ -70,4 +90,23 @@ public class UsersController(AppDb db):Ctl{
  [HD("{id}")]public Tr Del(int id)=>db.delById<User>(id);
 }
 public record UserIn(string Name,string Email);
+```
+
+Same endpoints as a Minimal API (in `Program.cs`):
+
+```csharp
+var u=app.grp("/api/users");
+u.g("/{id}",(int id,AppDb db)=>db.Users.nt().w(x=>x.Id==id).ok1());
+u.g("",(AppDb db)=>db.Users.nt().okl());
+u.po("",async(UserIn r,AppDb db)=>r.Name.nil()?R.BadRequest():await db.okNew(new User{Name=r.Name,Email=r.Email}));
+u.dl("/{id}",(int id,AppDb db)=>db.delById<User>(id));
+```
+
+Test shape:
+
+```csharp
+public class UsersTests{
+ [F]public async Task Get_404_WhenMissing()=>(await db.Users.w(x=>x.Id==9).ok1()).isType<NotFoundResult>();
+ [Th][In("",false)][In("Ada",true)]public void Name_Validates(string n,bool ok)=>(!n.nil()).eq(ok);
+}
 ```

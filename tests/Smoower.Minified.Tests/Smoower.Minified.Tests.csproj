@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Packed mirrors of the authored test .cs (the L3 showcase form). Never
+         compiled; the .cs is the build input. -->
+    <Compile Remove="**/*.min.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
@@ -27,6 +33,8 @@
     <ProjectReference Include="..\..\src\Smoower.Minified.Json.Newtonsoft\Smoower.Minified.Json.Newtonsoft.csproj" />
     <ProjectReference Include="..\..\src\Smoower.Minified.Dapper\Smoower.Minified.Dapper.csproj" />
     <ProjectReference Include="..\..\src\Smoower.Minified.Identity\Smoower.Minified.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.MinimalApi\Smoower.Minified.MinimalApi.csproj" />
+    <ProjectReference Include="..\..\src\Smoower.Minified.Testing\Smoower.Minified.Testing.csproj" />
   </ItemGroup>
 
 </Project>

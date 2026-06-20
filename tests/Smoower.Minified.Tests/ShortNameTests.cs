@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Text.Json;
 using JPN = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using Smoower.Minified.EFCore;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -19,15 +18,15 @@ public class ShortNameTests
         [JPN("recurrenceDays")] public int? RD { get; set; }
     }
 
-    [Fact]
+    [F]
     public void Col_IsResolvedAsColumnWithLongName()
     {
         var attr = typeof(Row).GetProperty(nameof(Row.RD))!.GetCustomAttribute<ColumnAttribute>();
-        Assert.NotNull(attr);
-        Assert.Equal("RecurrenceDays", attr!.Name);
+        attr.notNul();
+        attr!.Name.eq("RecurrenceDays");
     }
 
-    [Fact]
+    [F]
     public void Jpn_PinsTheWireName()
-        => Assert.Equal("{\"recurrenceDays\":7}", JsonSerializer.Serialize(new Dto { RD = 7 }));
+        => JsonSerializer.Serialize(new Dto { RD = 7 }).eq("{\"recurrenceDays\":7}");
 }

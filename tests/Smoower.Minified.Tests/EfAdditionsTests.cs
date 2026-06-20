@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Smoower.Minified.EFCore;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -42,33 +41,33 @@ public class EfAdditionsTests
         return db;
     }
 
-    [Fact]
+    [F]
     public async Task MaxMin_Aggregate()
     {
         var db = await Seed(nameof(MaxMin_Aggregate));
-        Assert.Equal(3, await db.Things.max(t => t.Rank));
-        Assert.Equal(1, await db.Things.min(t => t.Rank));
+        (await db.Things.max(t => t.Rank)).eq(3);
+        (await db.Things.min(t => t.Rank)).eq(1);
     }
 
-    [Fact]
+    [F]
     public async Task Ntir_DoesNotTrack()
     {
         var name = nameof(Ntir_DoesNotTrack);
         (await Seed(name)).Dispose();
         var db = TestDbFactory.Create(name);
-        Assert.Equal(3, (await db.Things.ntir().lst()).Count);
-        Assert.Empty(db.ChangeTracker.Entries());
+        (await db.Things.ntir().lst()).Count.eq(3);
+        db.ChangeTracker.Entries().empty();
     }
 
-    [Fact]
+    [F]
     public async Task Gb_GroupsRows()
     {
         var db = await Seed(nameof(Gb_GroupsRows));
         var groups = await db.Things.gb(t => t.Rank % 2 == 0).s(g => new { g.Key, Count = g.Count() }).lst();
-        Assert.Equal(2, groups.Count);
+        groups.Count.eq(2);
     }
 
-    [Fact]
+    [F]
     public async Task Tinc_LoadsNestedGraph()
     {
         var db = new BlogDb(new DbContextOptionsBuilder<BlogDb>()
@@ -82,6 +81,6 @@ public class EfAdditionsTests
         db.ChangeTracker.Clear();
 
         var loaded = await db.Blogs.inc(b => b.Posts).tinc(p => p.Tags).one();
-        Assert.Equal("t", loaded!.Posts.Single().Tags.Single().Label);
+        loaded!.Posts.Single().Tags.Single().Label.eq("t");
     }
 }

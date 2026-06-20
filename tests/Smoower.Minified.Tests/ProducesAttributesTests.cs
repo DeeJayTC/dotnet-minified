@@ -1,36 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
 using Smoower.Minified.AspNetCore;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
 public class ProducesAttributesTests
 {
-    [Fact]
+    [F]
     public void PlainAttributes_CarryExpectedStatusCodes()
     {
-        Assert.Equal(200, new P200Attribute().StatusCode);
-        Assert.Equal(201, new P201Attribute().StatusCode);
-        Assert.Equal(204, new P204Attribute().StatusCode);
-        Assert.Equal(400, new P400Attribute().StatusCode);
-        Assert.Equal(404, new P404Attribute().StatusCode);
-        Assert.Equal(409, new P409Attribute().StatusCode);
-        Assert.Equal(500, new P500Attribute().StatusCode);
+        new P200Attribute().StatusCode.eq(200);
+        new P201Attribute().StatusCode.eq(201);
+        new P204Attribute().StatusCode.eq(204);
+        new P400Attribute().StatusCode.eq(400);
+        new P404Attribute().StatusCode.eq(404);
+        new P409Attribute().StatusCode.eq(409);
+        new P500Attribute().StatusCode.eq(500);
     }
 
-    [Fact]
+    [F]
     public void GenericAttributes_CarryStatusCodeAndType()
     {
         var a = new P200Attribute<string>();
-        Assert.Equal(200, a.StatusCode);
-        Assert.Equal(typeof(string), a.Type);
+        a.StatusCode.eq(200);
+        a.Type.eq(typeof(string));
 
         var c = new P201Attribute<int>();
-        Assert.Equal(201, c.StatusCode);
-        Assert.Equal(typeof(int), c.Type);
+        c.StatusCode.eq(201);
+        c.Type.eq(typeof(int));
     }
 
-    [Fact]
+    [F]
     public void Attributes_AreProducesResponseType()
-        => Assert.IsAssignableFrom<ProducesResponseTypeAttribute>(new P404Attribute());
+        => new P404Attribute().isAssignable<ProducesResponseTypeAttribute>();
 }

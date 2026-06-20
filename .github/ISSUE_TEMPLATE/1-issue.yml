@@ -1,0 +1,55 @@
+name: Issue
+description: Report a bug or unexpected behavior in a Smoower.Minified library.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing. Smoower.Minified is *ordinary C#* — every helper compiles to the
+        same IL as the long form it replaces — so most bugs are a helper that doesn't behave
+        like the code it stands in for. Show us that gap.
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package / area
+      options:
+        - Smoower.Minified.Core
+        - Smoower.Minified.AspNetCore
+        - Smoower.Minified.MinimalApi
+        - Smoower.Minified.EFCore (or a provider)
+        - Smoower.Minified.Testing
+        - Hosting / Logging / Http / Redis / Validation / Json / Dapper / Identity / Extensions
+        - Smoower.Minified.Generators ([Crud<>])
+        - Docs / cheat sheet
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: Describe the behavior of the long-form equivalent it should have matched.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal repro
+      description: The smallest compact snippet that shows it. This renders as C#; no backticks needed.
+      render: csharp
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      placeholder: "Smoower.Minified.* 0.3.0 · .NET 9.0"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched existing issues and the [cheat sheet](https://smoower.github.io/dotnet-minified/cheat-sheet.html).
+          required: true
+        - label: This is a behavior/bug report — not a request to compact the contract (routes, status codes, JSON/DB names stay stable by design).
+          required: true

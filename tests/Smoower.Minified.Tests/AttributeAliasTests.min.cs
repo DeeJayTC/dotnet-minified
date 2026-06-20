@@ -1,0 +1,1 @@
+namespace Smoower.Minified.Tests;public class AttributeAliasTests{[F]public void Fact_AliasIsDiscovered() => true.tru();[Th][In(2, 3, 5)][In(-1, 1, 0)]public void Theory_AliasIsDiscovered(int a, int b, int sum) => (a + b).eq(sum);}

@@ -1,0 +1,15 @@
+name: Other
+description: A question, idea, docs problem, or anything that isn't a bug or a library suggestion.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For anything that doesn't fit the other two — a usage question, something about the
+        compaction levels or the economics, a docs fix, or a half-formed idea. All welcome.
+  - type: textarea
+    id: body
+    attributes:
+      label: What's on your mind?
+    validations:
+      required: true

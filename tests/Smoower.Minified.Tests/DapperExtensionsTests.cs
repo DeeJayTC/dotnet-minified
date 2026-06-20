@@ -1,6 +1,5 @@
 using System.Data;
 using Smoower.Minified.Dapper;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -10,17 +9,17 @@ namespace Smoower.Minified.Tests;
 // way RedisSurfaceTests does. The bodies are direct Dapper calls.
 public class DapperExtensionsTests
 {
-    [Theory]
-    [InlineData("q")]
-    [InlineData("q1")]
-    [InlineData("qs")]
-    [InlineData("ex")]
-    [InlineData("scalar")]
+    [Th]
+    [In("q")]
+    [In("q1")]
+    [In("qs")]
+    [In("ex")]
+    [In("scalar")]
     public void Helper_Exists_AsExtensionOnIDbConnection(string name)
     {
         var method = typeof(DapperExtensions).GetMethod(name);
-        Assert.NotNull(method);
-        Assert.True(method!.IsStatic);
-        Assert.Equal(typeof(IDbConnection), method.GetParameters()[0].ParameterType);
+        method.notNul();
+        method!.IsStatic.tru();
+        method.GetParameters()[0].ParameterType.eq(typeof(IDbConnection));
     }
 }

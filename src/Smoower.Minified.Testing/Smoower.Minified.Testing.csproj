@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(SmoowerLibTargets)</TargetFrameworks>
+    <PackageId>Smoower.Minified.Testing</PackageId>
+    <Description>Compact xUnit assertion helpers (eq/neq/tru/nul/notNul/isType/throws...) as fluent, actual-first extension methods, plus the F/Th/In attribute aliases. Cuts the tokens an AI spends writing test code; same behavior, calls xUnit's Assert underneath.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.assert" Version="2.9.2" />
+  </ItemGroup>
+
+</Project>

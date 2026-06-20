@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Smoower.Minified.EFCore;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -53,7 +52,7 @@ public class ConfigExtensionsTests
 {
     private static CfgDb Db(string n) => new(new DbContextOptionsBuilder<CfgDb>().UseInMemoryDatabase(n).Options);
 
-    [Fact]
+    [F]
     public async Task Qf_FiltersHiddenRows()
     {
         var db = Db(nameof(Qf_FiltersHiddenRows));
@@ -63,25 +62,25 @@ public class ConfigExtensionsTests
         db.Books.Add(new Book { Title = "secret", Hidden = true, Author = a });
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
-        Assert.Equal(new[] { "shown" }, await db.Books.s(b => b.Title).lst());
+        (await db.Books.s(b => b.Title).lst()).eqSeq(new[] { "shown" });
     }
 
-    [Fact]
+    [F]
     public void Property_And_Index_Configured()
     {
         var author = Db(nameof(Property_And_Index_Configured)).Model.FindEntityType(typeof(Author))!;
-        Assert.Equal(100, author.FindProperty(nameof(Author.Name))!.GetMaxLength());
-        Assert.False(author.FindProperty(nameof(Author.Name))!.IsNullable);
-        Assert.Contains(author.GetIndexes(), i => i.IsUnique);
+        author.FindProperty(nameof(Author.Name))!.GetMaxLength().eq(100);
+        author.FindProperty(nameof(Author.Name))!.IsNullable.fls();
+        author.GetIndexes().has(i => i.IsUnique);
     }
 
-    [Fact]
+    [F]
     public void Relationships_And_Conversion_Configured()
     {
         var book = Db(nameof(Relationships_And_Conversion_Configured)).Model.FindEntityType(typeof(Book))!;
         var fks = book.GetForeignKeys().ToList();
-        Assert.Contains(fks, f => f.Properties.Any(p => p.Name == nameof(Book.AuthorId)) && f.DeleteBehavior == DeleteBehavior.Cascade);
-        Assert.Contains(fks, f => f.Properties.Any(p => p.Name == nameof(Book.EditorId)) && f.DeleteBehavior == DeleteBehavior.SetNull);
+        fks.has(f => f.Properties.Any(p => p.Name == nameof(Book.AuthorId)) && f.DeleteBehavior == DeleteBehavior.Cascade);
+        fks.has(f => f.Properties.Any(p => p.Name == nameof(Book.EditorId)) && f.DeleteBehavior == DeleteBehavior.SetNull);
         // conv<string>() is exercised during model build above; the InMemory provider
         // drops value converters, so there is nothing to assert on at runtime here.
     }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Smoower.Minified.AspNetCore;
 using Smoower.Minified.EFCore;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -15,53 +14,53 @@ public class ResultExtensionsTests
         return db;
     }
 
-    [Fact]
+    [F]
     public async Task Ok1_OkWhenFound()
-        => Assert.IsType<OkObjectResult>(await (await Seed(nameof(Ok1_OkWhenFound))).Things.w(t => t.Name == "a").ok1());
+        => (await (await Seed(nameof(Ok1_OkWhenFound))).Things.w(t => t.Name == "a").ok1()).isType<OkObjectResult>();
 
-    [Fact]
+    [F]
     public async Task Ok1_NotFoundWhenMissing()
-        => Assert.IsType<NotFoundResult>(await (await Seed(nameof(Ok1_NotFoundWhenMissing))).Things.w(t => t.Name == "zzz").ok1());
+        => (await (await Seed(nameof(Ok1_NotFoundWhenMissing))).Things.w(t => t.Name == "zzz").ok1()).isType<NotFoundResult>();
 
-    [Fact]
+    [F]
     public async Task Okl_OkWithList()
     {
-        var ok = Assert.IsType<OkObjectResult>(await (await Seed(nameof(Okl_OkWithList))).Things.okl());
-        Assert.Equal(2, Assert.IsAssignableFrom<IEnumerable<Thing>>(ok.Value).Count());
+        var ok = (await (await Seed(nameof(Okl_OkWithList))).Things.okl()).isType<OkObjectResult>();
+        ok.Value.isAssignable<IEnumerable<Thing>>().Count().eq(2);
     }
 
-    [Fact]
+    [F]
     public async Task Okc_OkWithCount()
     {
-        var ok = Assert.IsType<OkObjectResult>(await (await Seed(nameof(Okc_OkWithCount))).Things.okc());
-        Assert.Equal(2, ok.Value);
+        var ok = (await (await Seed(nameof(Okc_OkWithCount))).Things.okc()).isType<OkObjectResult>();
+        ok.Value.eq(2);
     }
 
-    [Fact]
+    [F]
     public async Task OkId_OkThenNotFound()
     {
         var db = await Seed(nameof(OkId_OkThenNotFound));
-        Assert.IsType<OkObjectResult>(await db.Things.okId(1));
-        Assert.IsType<NotFoundResult>(await db.Things.okId(9999));
+        (await db.Things.okId(1)).isType<OkObjectResult>();
+        (await db.Things.okId(9999)).isType<NotFoundResult>();
     }
 
-    [Fact]
+    [F]
     public async Task OkAdd_PersistsAndReturnsOk()
     {
         var db = TestDbFactory.Create(nameof(OkAdd_PersistsAndReturnsOk));
-        Assert.IsType<OkObjectResult>(await db.okAdd(new Thing { Name = "x", Rank = 1 }));
-        Assert.Equal(1, await db.Things.cnt());
+        (await db.okAdd(new Thing { Name = "x", Rank = 1 })).isType<OkObjectResult>();
+        (await db.Things.cnt()).eq(1);
     }
 
-    [Fact]
+    [F]
     public async Task DelById_NoContentThenRemoved()
     {
         var db = await Seed(nameof(DelById_NoContentThenRemoved));
-        Assert.IsType<NoContentResult>(await db.delById<Thing>(1));
-        Assert.Equal(1, await db.Things.cnt());
+        (await db.delById<Thing>(1)).isType<NoContentResult>();
+        (await db.Things.cnt()).eq(1);
     }
 
-    [Fact]
+    [F]
     public async Task DelById_NotFoundWhenMissing()
-        => Assert.IsType<NotFoundResult>(await (await Seed(nameof(DelById_NotFoundWhenMissing))).delById<Thing>(9999));
+        => (await (await Seed(nameof(DelById_NotFoundWhenMissing))).delById<Thing>(9999)).isType<NotFoundResult>();
 }

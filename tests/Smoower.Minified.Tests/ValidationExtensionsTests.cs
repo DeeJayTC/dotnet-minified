@@ -1,6 +1,5 @@
 using FluentValidation;
 using Smoower.Minified.Validation;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -18,20 +17,20 @@ public class ValidationExtensionsTests
         }
     }
 
-    [Fact]
+    [F]
     public void Valid_PassesAllRules()
-        => Assert.True(new PersonValidator().Validate(new Person("Ada", "ada@x.com", 36)).IsValid);
+        => new PersonValidator().Validate(new Person("Ada", "ada@x.com", 36)).IsValid.tru();
 
-    [Theory]
-    [InlineData(null, "ada@x.com", 36, "Name")]      // req
-    [InlineData("TooLongName", "ada@x.com", 36, "Name")] // max
-    [InlineData("Ada", "not-an-email", 36, "Email")] // email
-    [InlineData("Ada", "ada@x.com", 0, "Age")]       // gt
-    [InlineData("Ada", "ada@x.com", 200, "Age")]     // lte
+    [Th]
+    [In(null, "ada@x.com", 36, "Name")]
+    [In("TooLongName", "ada@x.com", 36, "Name")]
+    [In("Ada", "not-an-email", 36, "Email")]
+    [In("Ada", "ada@x.com", 0, "Age")]
+    [In("Ada", "ada@x.com", 200, "Age")]
     public void Invalid_FailsExpectedProperty(string? name, string? email, int age, string property)
     {
         var result = new PersonValidator().Validate(new Person(name, email, age));
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == property);
+        result.IsValid.fls();
+        result.Errors.has(e => e.PropertyName == property);
     }
 }

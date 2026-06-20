@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Smoower.Minified.Identity;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -10,7 +9,7 @@ namespace Smoower.Minified.Tests;
 // would fail to compile.
 public class IdentityExtensionsTests
 {
-    [Fact]
+    [F]
     public void UserManager_Shorteners_Bind()
     {
         Func<UserManager<IdentityUser>, Task<IdentityResult>> create = m => m.create(new IdentityUser(), "Pw1!");
@@ -18,21 +17,21 @@ public class IdentityExtensionsTests
         Func<UserManager<IdentityUser>, Task<bool>> checkPw = m => m.checkPw(new IdentityUser(), "Pw1!");
         Func<UserManager<IdentityUser>, Task<IList<string>>> roles = m => m.roles(new IdentityUser());
         Func<UserManager<IdentityUser>, Task<IdentityResult>> addRole = m => m.addRole(new IdentityUser(), "admin");
-        Assert.NotNull(create);
-        Assert.NotNull(byEmail);
-        Assert.NotNull(checkPw);
-        Assert.NotNull(roles);
-        Assert.NotNull(addRole);
+        create.notNul();
+        byEmail.notNul();
+        checkPw.notNul();
+        roles.notNul();
+        addRole.notNul();
     }
 
-    [Fact]
+    [F]
     public void SignIn_And_Role_Shorteners_Bind()
     {
         Func<SignInManager<IdentityUser>, Task<SignInResult>> pwSignIn = m => m.pwSignIn("u", "Pw1!", persist: true);
         Func<RoleManager<IdentityRole>, Task<IdentityResult>> roleCreate = m => m.create(new IdentityRole("admin"));
         Func<RoleManager<IdentityRole>, Task<bool>> roleExists = m => m.exists("admin");
-        Assert.NotNull(pwSignIn);
-        Assert.NotNull(roleCreate);
-        Assert.NotNull(roleExists);
+        pwSignIn.notNul();
+        roleCreate.notNul();
+        roleExists.notNul();
     }
 }

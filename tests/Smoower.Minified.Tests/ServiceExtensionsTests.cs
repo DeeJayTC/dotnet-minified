@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Smoower.Minified.Hosting;
-using Xunit;
 
 namespace Smoower.Minified.Tests;
 
@@ -10,34 +9,34 @@ public class ServiceExtensionsTests
     private sealed class Foo : IFoo;
     private sealed class Bar;
 
-    [Fact]
+    [F]
     public void Scoped_RegistersWithScopedLifetime()
     {
         var services = new ServiceCollection().scoped<IFoo, Foo>();
-        var d = Assert.Single(services);
-        Assert.Equal(ServiceLifetime.Scoped, d.Lifetime);
-        Assert.Equal(typeof(IFoo), d.ServiceType);
-        Assert.Equal(typeof(Foo), d.ImplementationType);
+        var d = services.sole();
+        d.Lifetime.eq(ServiceLifetime.Scoped);
+        d.ServiceType.eq(typeof(IFoo));
+        d.ImplementationType.eq(typeof(Foo));
     }
 
-    [Fact]
+    [F]
     public void Single_ResolvesSameInstance()
     {
         var provider = new ServiceCollection().single<Bar>().BuildServiceProvider();
-        Assert.Same(provider.GetRequiredService<Bar>(), provider.GetRequiredService<Bar>());
+        provider.GetRequiredService<Bar>().same(provider.GetRequiredService<Bar>());
     }
 
-    [Fact]
+    [F]
     public void Trans_ResolvesNewInstances()
     {
         var provider = new ServiceCollection().trans<Bar>().BuildServiceProvider();
-        Assert.NotSame(provider.GetRequiredService<Bar>(), provider.GetRequiredService<Bar>());
+        provider.GetRequiredService<Bar>().notSame(provider.GetRequiredService<Bar>());
     }
 
-    [Fact]
+    [F]
     public void Svc_ResolvesRequiredService()
     {
         IServiceProvider provider = new ServiceCollection().single<Bar>().BuildServiceProvider();
-        Assert.Same(provider.GetRequiredService<Bar>(), provider.svc<Bar>());
+        provider.GetRequiredService<Bar>().same(provider.svc<Bar>());
     }
 }

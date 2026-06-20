@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace Smoower.Minified.Tests;
 
 // Coarse style guard: scans the sample API source for long-form tokens that the
@@ -50,14 +48,13 @@ public class ForbiddenTokenCheckerTests
         }
     }
 
-    [Theory]
-    [MemberData(nameof(SampleFiles))]
+    [Th]
+    [Mem(nameof(SampleFiles))]
     public void SampleFile_HasNoForbiddenLongFormTokens(string file)
     {
         var text = File.ReadAllText(file);
         var hits = Forbidden.Where(text.Contains).ToArray();
-        Assert.True(hits.Length == 0,
-            $"{Path.GetFileName(file)} contains forbidden long-form token(s): {string.Join(", ", hits)}");
+        (hits.Length == 0).tru($"{Path.GetFileName(file)} contains forbidden long-form token(s): {string.Join(", ", hits)}");
     }
 
     private static string FindSamplesDir()

@@ -1,0 +1,69 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Smoower.Minified.EFCore;
+using Smoower.Minified.MinimalApi;
+
+namespace Smoower.Minified.Tests;
+
+public class MinimalResultExtensionsTests
+{
+    private static async Task<TestDb> Seed(string name)
+    {
+        var db = TestDbFactory.Create("min-" + name);
+        db.Things.AddRange(new Thing { Name = "a", Rank = 1 }, new Thing { Name = "b", Rank = 2 });
+        await db.SaveChangesAsync();
+        return db;
+    }
+
+    [F]
+    public async Task Ok1_OkWhenFound()
+        => (await (await Seed(nameof(Ok1_OkWhenFound))).Things.w(t => t.Name == "a").ok1()).isType<Ok<Thing>>();
+
+    [F]
+    public async Task Ok1_NotFoundWhenMissing()
+        => (await (await Seed(nameof(Ok1_NotFoundWhenMissing))).Things.w(t => t.Name == "zzz").ok1()).isType<NotFound>();
+
+    [F]
+    public async Task Okl_OkWithList()
+        => (await (await Seed(nameof(Okl_OkWithList))).Things.okl()).isType<Ok<List<Thing>>>().Value!.Count.eq(2);
+
+    [F]
+    public async Task Okc_OkWithCount()
+        => (await (await Seed(nameof(Okc_OkWithCount))).Things.okc()).isType<Ok<int>>().Value.eq(2);
+
+    [F]
+    public async Task OkId_OkThenNotFound()
+    {
+        var db = await Seed(nameof(OkId_OkThenNotFound));
+        (await db.Things.okId(1)).isType<Ok<Thing>>();
+        (await db.Things.okId(9999)).isType<NotFound>();
+    }
+
+    [F]
+    public async Task OkNew_CreatedAndPersisted()
+    {
+        var db = TestDbFactory.Create("min-" + nameof(OkNew_CreatedAndPersisted));
+        (await db.okNew(new Thing { Name = "x", Rank = 1 })).isType<Created<Thing>>();
+        (await db.Things.cnt()).eq(1);
+    }
+
+    [F]
+    public async Task OkAdd_OkAndPersisted()
+    {
+        var db = TestDbFactory.Create("min-" + nameof(OkAdd_OkAndPersisted));
+        (await db.okAdd(new Thing { Name = "x", Rank = 1 })).isType<Ok<Thing>>();
+        (await db.Things.cnt()).eq(1);
+    }
+
+    [F]
+    public void Created_Wraps201()
+        => new Thing { Name = "z" }.created().isType<Created<Thing>>();
+
+    [F]
+    public async Task DelById_NoContentThenNotFound()
+    {
+        var db = await Seed(nameof(DelById_NoContentThenNotFound));
+        (await db.delById<Thing>(1)).isType<NoContent>();
+        (await db.Things.cnt()).eq(1);
+        (await db.delById<Thing>(9999)).isType<NotFound>();
+    }
+}
